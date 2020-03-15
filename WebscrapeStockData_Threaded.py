@@ -44,7 +44,27 @@ class LivePrice(Thread):
                 self.ticker_prices = [si.get_live_price(ticker) for ticker in self.tickerlist]
         else:
             print('No tickers passed...')
-            
+ 
+
+# Thread to upload csv file to Github
+class GithubUpdate(Thread):
+    def __init__(self, tickerlist = None):
+        Thread.__init__(self)
+    
+    # Upload .csv to github rep
+    def upload_github(self):
+        os.system("git status")
+        time.sleep(1)
+        os.system("git add .")
+        time.sleep(3)
+        os.system("git commit -m 'added'")
+        time.sleep(3)
+        os.system("git push")
+        print('\nUPLOADED TO GITHUB\n')
+    
+    def run(self):
+        pass
+           
 
 # Assign workers to tackle large ticker list
 class AssignWorkers():
@@ -81,6 +101,7 @@ class AssignWorkers():
 
                 first += division
                 last += division
+
     
 # Use for testing  
 if __name__ == '__main__': 

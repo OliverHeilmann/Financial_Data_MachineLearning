@@ -41,7 +41,7 @@ import string
 import pandas as pd
 from datetime import datetime
 from pytz import timezone   
-from WebscrapeStockData_Threaded import AssignWorkers
+from WebscrapeStockData_Threaded import AssignWorkers, GithubUpdate 
 
 # Webscrape from Wikipedia URLs (consider non real time)
 def save_FTSE250_tickers(tickercolumn=0, website=None, filename=None):
@@ -93,15 +93,6 @@ def stockmarket_openhours():
 #        return True
     return True
 
-
-# Upload .csv to github rep
-def upload_github():
-    os.system("git add .")
-    time.sleep(5)
-    os.system("git commit -m 'added'")
-    time.sleep(5)
-    os.system("git push")
-
           
 # Main code with governing parameters
 if __name__ == '__main__':
@@ -140,16 +131,13 @@ if __name__ == '__main__':
                     df.to_csv(m_by_m)
                     print(df)
                     print('\nCreated file for minute by minute data\n{} rows added'.format(len(df)-1))
-                    upload_github()
-                    print('\nUPLOADED TO GITHUB\n')
-                    
+                    GithubUpdate.upload_github() 
                 else:
                     # Append dataframe to csv file
                     df.to_csv(m_by_m, mode='a', header=False)
                     print(df)
                     print('\nAppended {} with more data\n{} rows added'.format(m_by_m, len(df)-1))
-                    upload_github()
-                    print('\nUPLOADED TO GITHUB\n')
+                    GithubUpdate.upload_github()
                 
                 # trigger state changed to stop data collection on market close
                 trigger = True

@@ -81,17 +81,16 @@ def stockmarket_openhours():
     weekday = datetime.now(USA_East).weekday()
     hour = datetime.now(USA_East).hour
     
-#    # Simple logic to stop collecting data during market close
-#    if 4 <= weekday <= 6:
-#        if weekday == 4 and hour <= 17:
-#            return True
-#        elif weekday == 6 and hour >= 18:
-#            return True
-#        else:
-#            return False
-#    else:
-#        return True
-    return True
+    # Simple logic to stop collecting data during market close
+    if 4 <= weekday <= 6:
+        if weekday == 4 and hour <= 17:
+            return True
+        elif weekday == 6 and hour >= 18:
+            return True
+        else:
+            return False
+    else:
+        return True
 
           
 # Main code with governing parameters
@@ -101,8 +100,8 @@ if __name__ == '__main__':
     tickercolumn = 0    # which column are tickers in
     ticker_size = 10    # number of tickers used from Wiki URL
     threads = 5         # number of threads pulling ticker data
-    pull_step = 1       # time (seconds) between price pull
-    rows = 10#60*60        # number of rows before csv is pushed to Github (1 hour)
+    pull_step = 60      # time (seconds) between price pull
+    rows = 60           # number of rows before csv is pushed to Github (1 hour)
     
     # Minute by Minute filename
     m_by_m = 'minute_by_minute.csv'
@@ -147,7 +146,7 @@ if __name__ == '__main__':
                 trigger = True
             else:
                 print('\nMarkets are closed...\n')
-                time.sleep(60)
+                time.sleep(pull_step)
     except:
         print('Error Thrown in Main Script')
     

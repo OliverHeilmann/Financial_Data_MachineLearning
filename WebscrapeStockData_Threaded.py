@@ -67,9 +67,9 @@ class GithubUpdate(Thread):
                 os.system("git status")
                 time.sleep(1)
                 os.system("git add .")
-                time.sleep(3)
+                time.sleep(1)
                 os.system("git commit -m 'added'")
-                time.sleep(3)
+                time.sleep(1)
                 os.system("git push")
                 print('\nUPLOADED TO GITHUB\n')
                 self.trigger=False

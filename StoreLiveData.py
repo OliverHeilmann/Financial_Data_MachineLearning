@@ -121,13 +121,13 @@ if __name__ == '__main__':
     filename = 'sp500tickers.pickle'
     tickers = save_FTSE250_tickers(0, webURL, filename)
     
+    # Start webscraping threads
+    AW = AssignWorkers()
+    AW.assignworkers(tickerlist=tickers, tickerNo=ticker_size, workerNo=threads)
+    
     try:
         while stockmarket_openhours()==True or trigger==False:
             if stockmarket_openhours()==True:
-                # Start webscraping threads
-                AW = AssignWorkers()
-                AW.assignworkers(tickerlist=tickers, tickerNo=ticker_size, workerNo=threads)
-    
                 # Make empty dataframe to append to
                 df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
                 

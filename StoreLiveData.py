@@ -99,10 +99,10 @@ if __name__ == '__main__':
     # Required Parameters
     trigger = False     # trigger to stop collecting data on market close
     tickercolumn = 0    # which column are tickers in
-    ticker_size = 100   # number of tickers used from Wiki URL
+    ticker_size = 10   # number of tickers used from Wiki URL
     threads = 5         # number of threads pulling ticker data
-    pull_step = 60      # time (seconds) between price pull
-    rows = 60           # number of rows before csv is pushed to Github (1 hour)
+    pull_step = 1      # time (seconds) between price pull
+    rows = 10           # number of rows before csv is pushed to Github (1 hour)
     
     # Minute by Minute filename
     m_by_m = 'minute_by_minute.csv'

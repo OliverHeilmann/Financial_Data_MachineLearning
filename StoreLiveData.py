@@ -39,7 +39,8 @@ import requests
 import pdb, time, os
 import string
 import pandas as pd
-import keyboard
+from datetime import datetime
+from pytz import timezone   
 from WebscrapeStockData_Threaded import AssignWorkers
 
 # Webscrape from Wikipedia URLs (consider non real time)
@@ -71,7 +72,27 @@ def dataframe_prices(dataframe):
         return df
     else:
         print('No dataframe passed to dataframe_prices')
- 
+
+
+# Eastern time required to determine open trading times
+def stockmarket_openhours():
+    # Get time now
+    USA_East = timezone('US/Eastern')
+    weekday = datetime.now(USA_East).weekday()
+    hour = datetime.now(USA_East).hour
+    
+#    # Simple logic to stop collecting data on weekend
+#    if 4 <= weekday <= 6:
+#        if weekday == 4 and hour <= 17:
+#            return True
+#        elif weekday == 6 and hour >= 18:
+#            return True
+#        else:
+#            return False
+#    else:
+#        return True
+    return True
+
 # Upload .csv to github rep
 def upload_github():
     os.system("git add .")
@@ -79,7 +100,8 @@ def upload_github():
     os.system("git commit -m 'added'")
     time.sleep(5)
     os.system("git push")
-           
+
+          
 # Main code with governing parameters
 if __name__ == '__main__':
     # Required Parameters
@@ -87,56 +109,53 @@ if __name__ == '__main__':
     ticker_size = 10    # number of tickers used from Wiki URL
     threads = 5         # number of threads pulling ticker data
     pull_step = 1       # time (seconds) between price pull
-    rows = 60*60        # number of rows before csv is pushed to Github (1 hour)
+    rows = 10#60*60        # number of rows before csv is pushed to Github (1 hour)
     
     # Minute by Minute filename
     m_by_m = 'minute_by_minute.csv'
     
     # Get tickers from Wiki URL
     webURL = 'http://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
-    filename = 'sb500tickers.pickle'
+    filename = 'sp500tickers.pickle'
     tickers = save_FTSE250_tickers(0, webURL, filename)
     
     # Start webscraping threads
     AW = AssignWorkers()
     AW.assignworkers(tickerlist=tickers, tickerNo=ticker_size, workerNo=threads)
-
-    while not keyboard.is_pressed('q'):
-        # Make empty dataframe to append to
-        df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
-
-        # Append price list to dataframe
-        for i in range(0,rows):
-            df = dataframe_prices(dataframe = df)
-            time.sleep(pull_step)
-
-        if not os.path.exists(m_by_m):
-            df.to_csv(m_by_m)
-            print(df)
-            print('\nCreated file for minute by minute data\n{} rows added'.format(len(df)-1))
-            upload_github()
-            print('\nUPLOADED TO GITHUB\n')
-            
-        else:
-            # Append dataframe to csv file
-            df.to_csv(m_by_m, mode='a', header=False)
-            print(df)
-            print('\nAppended {} with more data\n{} rows added'.format(m_by_m, len(df)-1))
-            upload_github()
-            print('\nUPLOADED TO GITHUB\n')
-   
+    
+    try:
+        while stockmarket_openhours()==True:
+            # Make empty dataframe to append to
+            df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
+    
+            # Append price list to dataframe
+            for i in range(0,rows):
+                df = dataframe_prices(dataframe = df)
+                time.sleep(pull_step)
+    
+            if not os.path.exists(m_by_m):
+                df.to_csv(m_by_m)
+                print(df)
+                print('\nCreated file for minute by minute data\n{} rows added'.format(len(df)-1))
+                upload_github()
+                print('\nUPLOADED TO GITHUB\n')
+                
+            else:
+                # Append dataframe to csv file
+                df.to_csv(m_by_m, mode='a', header=False)
+                print(df)
+                print('\nAppended {} with more data\n{} rows added'.format(m_by_m, len(df)-1))
+                upload_github()
+                print('\nUPLOADED TO GITHUB\n')
+    except:
+        AW.stop_all()
+        print('Error Thrown in Main Script')
+    
+    # Stop threads when exiting while loop
     AW.stop_all()
     
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    # Alert user that collecting has finished
+    print('''
+            ###############################\n
+            No more data will be collected.\n
+            ###############################''')  

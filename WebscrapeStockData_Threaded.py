@@ -124,13 +124,13 @@ if __name__ == '__main__':
         with open(picklepath, "rb") as f:
             tickers = pickle.load(f)
     
-    # Testing Github thread
-    GH = GithubUpdate()
-    GH.start()
-    time.sleep(0.5)
-    GH.upload_github()
-    
-     # Testing webscraping threads
+#    # Testing Github thread
+#    GH = GithubUpdate()
+#    GH.start()
+#    time.sleep(0.5)
+#    GH.upload_github()
+#    
+#    # Testing webscraping threads
 #    AW = AssignWorkers()
 #    AW.assignworkers(tickerlist=tickers, tickerNo = 100, workerNo = 5)
 #    for i in range(0,10):

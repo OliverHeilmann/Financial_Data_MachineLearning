@@ -81,16 +81,18 @@ def stockmarket_openhours():
     weekday = datetime.now(USA_East).weekday()
     hour = datetime.now(USA_East).hour
     
-    # Simple logic to stop collecting data during market close
-    if 4 <= weekday <= 6:
-        if weekday == 4 and hour <= 17:
-            return True
-        elif weekday == 6 and hour >= 18:
-            return True
-        else:
-            return False
-    else:
-        return True
+#    # Simple logic to stop collecting data during market close
+#    if 4 <= weekday <= 6:
+#        if weekday == 4 and hour <= 17:
+#            return True
+#        elif weekday == 6 and hour >= 18:
+#            return True
+#        else:
+#            return False
+#    else:
+#        return True
+    return True
+
 
 # Upload .csv to github rep
 def upload_github():
@@ -104,6 +106,7 @@ def upload_github():
 # Main code with governing parameters
 if __name__ == '__main__':
     # Required Parameters
+    trigger = False     # trigger to stop collecting data on market close
     tickercolumn = 0    # which column are tickers in
     ticker_size = 10    # number of tickers used from Wiki URL
     threads = 5         # number of threads pulling ticker data
@@ -118,34 +121,41 @@ if __name__ == '__main__':
     filename = 'sp500tickers.pickle'
     tickers = save_FTSE250_tickers(0, webURL, filename)
     
-    # Start webscraping threads
-    AW = AssignWorkers()
-    AW.assignworkers(tickerlist=tickers, tickerNo=ticker_size, workerNo=threads)
-    
     try:
-        while stockmarket_openhours()==True:
-            # Make empty dataframe to append to
-            df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
+        while stockmarket_openhours()==True or trigger==False:
+            if stockmarket_openhours()==True:
+                # Start webscraping threads
+                AW = AssignWorkers()
+                AW.assignworkers(tickerlist=tickers, tickerNo=ticker_size, workerNo=threads)
     
-            # Append price list to dataframe
-            for i in range(0,rows):
-                df = dataframe_prices(dataframe = df)
-                time.sleep(pull_step)
-    
-            if not os.path.exists(m_by_m):
-                df.to_csv(m_by_m)
-                print(df)
-                print('\nCreated file for minute by minute data\n{} rows added'.format(len(df)-1))
-                upload_github()
-                print('\nUPLOADED TO GITHUB\n')
+                # Make empty dataframe to append to
+                df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
                 
+                # Append price list to dataframe
+                for i in range(0,rows):
+                    df = dataframe_prices(dataframe = df)
+                    time.sleep(pull_step)
+        
+                if not os.path.exists(m_by_m):
+                    df.to_csv(m_by_m)
+                    print(df)
+                    print('\nCreated file for minute by minute data\n{} rows added'.format(len(df)-1))
+                    upload_github()
+                    print('\nUPLOADED TO GITHUB\n')
+                    
+                else:
+                    # Append dataframe to csv file
+                    df.to_csv(m_by_m, mode='a', header=False)
+                    print(df)
+                    print('\nAppended {} with more data\n{} rows added'.format(m_by_m, len(df)-1))
+                    upload_github()
+                    print('\nUPLOADED TO GITHUB\n')
+                
+                # trigger state changed to stop data collection on market close
+                trigger = True
             else:
-                # Append dataframe to csv file
-                df.to_csv(m_by_m, mode='a', header=False)
-                print(df)
-                print('\nAppended {} with more data\n{} rows added'.format(m_by_m, len(df)-1))
-                upload_github()
-                print('\nUPLOADED TO GITHUB\n')
+                print('\nMarkets are closed...\n')
+                time.sleep(60)
     except:
         AW.stop_all()
         print('Error Thrown in Main Script')

@@ -121,9 +121,7 @@ if __name__ == '__main__':
         with open(picklepath, "rb") as f:
             tickers = pickle.load(f)
     
-    gh = GithubUpdate()
-    gh.start()
-    gh.upload_github()
+    GithubUpdate().upload_github()
     
 #    AW = AssignWorkers()
 #    AW.assignworkers(tickerlist=tickers, tickerNo = 100, workerNo = 5)

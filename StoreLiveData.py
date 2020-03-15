@@ -116,8 +116,8 @@ if __name__ == '__main__':
     AW = AssignWorkers()
     AW.assignworkers(tickerlist=tickers, tickerNo=ticker_size, workerNo=threads)
     
-    # Initiate Github Thread
-    GH = GithubUpdate(); GH.start()
+    # Initiate Github Thread (start not needed to be called here)
+    GH = GithubUpdate()
     
     try:
         while stockmarket_openhours()==True or trigger==False:

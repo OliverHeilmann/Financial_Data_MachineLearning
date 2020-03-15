@@ -69,6 +69,7 @@ class GithubUpdate(Thread):
     
     def run(self):
         while self.terminationRequired == False:
+            print('No need to run Github thread...')
             time.sleep(0.01)
             pass
            
@@ -122,7 +123,6 @@ if __name__ == '__main__':
             tickers = pickle.load(f)
     
     GithubUpdate().upload_github()
-    
 #    AW = AssignWorkers()
 #    AW.assignworkers(tickerlist=tickers, tickerNo = 100, workerNo = 5)
 #    for i in range(0,10):

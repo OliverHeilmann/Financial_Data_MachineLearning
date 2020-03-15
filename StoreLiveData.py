@@ -39,6 +39,7 @@ import requests
 import pdb, time, os
 import string
 import pandas as pd
+import keyboard
 from WebscrapeStockData_Threaded import AssignWorkers
 
 # Webscrape from Wikipedia URLs (consider non real time)
@@ -60,42 +61,68 @@ def save_FTSE250_tickers(tickercolumn=0, website=None, filename=None):
     except:
         print('Likely not a Wikipedia URL...')
 
-def dataframe_prices(dataframe = None):
-    if dataframe != None:
+
+# Pull live stock prices and append to dataframe
+def dataframe_prices(dataframe):
+    if dataframe.size >= 0:
         liveprice = AW.pull_live_price()
         if liveprice != None:
             df.loc[len(df)] = liveprice
         return df
     else:
-        print('Missing parameters in dataframe_prices')
-            
-
+        print('No dataframe passed to dataframe_prices')
+ 
+# Upload .csv to github rep
+def upload_github():
+    os.system("git add .")
+    time.sleep(5)
+    os.system("git commit -m 'added'")
+    time.sleep(5)
+    os.system("git push")
+           
+# Main code with governing parameters
 if __name__ == '__main__':
     # Required Parameters
     tickercolumn = 0
     ticker_size = 10
+    threads = 5
+    
+    # Minute by Minute filename
+    m_by_m = 'minute_by_minute.csv'
     
     # Get tickers from Wiki URL
     webURL = 'http://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
     filename = 'sb500tickers.pickle'
     tickers = save_FTSE250_tickers(0, webURL, filename)
     
-    # Make empty dataframe to append to
-    df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
-    
     # Start webscraping threads
     AW = AssignWorkers()
-    AW.assignworkers(tickerlist=tickers, tickerNo = ticker_size, workerNo = 5)
-    
-    # Append price list to dataframe
-    dataframe = dataframe_prices(dataframe = df)
-    
-    for i in range(0,20):
-        liveprice = AW.pull_live_price()
-        if liveprice != None:
-            df.loc[len(df)] = liveprice
+    AW.assignworkers(tickerlist=tickers, tickerNo=ticker_size, workerNo=threads)
+
+    while not keyboard.is_pressed('q'):
+        # Make empty dataframe to append to
+        df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
+
+        # Append price list to dataframe
+        for i in range(0,20):
+            df = dataframe_prices(dataframe = df)
+            time.sleep(1)
+
+        if not os.path.exists(m_by_m):
+            df.to_csv(m_by_m)
             print(df)
-        time.sleep(1)
+            print('\nCreated file for minute by minute data\n{} rows added'.format(len(df)-1))
+            upload_github()
+            print('UPLOADED TO GITHUB')
+            
+        else:
+            # Append dataframe to csv file
+            df.to_csv(m_by_m, mode='a', header=False)
+            print(df)
+            print('\nAppended {} with more data\n{} rows added'.format(m_by_m, len(df)-1))
+            upload_github()
+            print('UPLOADED TO GITHUB')
+   
     AW.stop_all()
     
 

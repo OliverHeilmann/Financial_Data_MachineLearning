@@ -44,7 +44,7 @@ class LivePrice(Thread):
                 self.ticker_prices = [si.get_live_price(ticker) for ticker in self.tickerlist]
         else:
             print('No tickers passed...')
-
+            
 
 # Assign workers to tackle large ticker list
 class AssignWorkers():

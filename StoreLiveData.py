@@ -118,6 +118,7 @@ if __name__ == '__main__':
     
     # Initiate Github Thread (start not needed to be called here)
     GH = GithubUpdate()
+    GH.start()
     
     try:
         while stockmarket_openhours()==True or trigger==False:

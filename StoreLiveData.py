@@ -33,14 +33,16 @@ Notes:
     will tackle this later on.
 
 '''
-
 import bs4 as bs
 import pickle
-import requests, pdb
+import requests
+import pdb, time, os
 import string
+import pandas as pd
+from WebscrapeStockData_Threaded import AssignWorkers
 
 # Webscrape from Wikipedia URLs (consider non real time)
-def save_FTSE250_tickers(tickercolumn=0, website=None):
+def save_FTSE250_tickers(tickercolumn=0, website=None, filename=None):
     try:
         if website != None:
             resp = requests.get(website)
@@ -51,20 +53,61 @@ def save_FTSE250_tickers(tickercolumn=0, website=None):
                 ticker = row.findAll('td')[tickercolumn].text.replace('\n', '').upper()
                 ticker = ticker.translate(str.maketrans('', '', string.punctuation)) #del punctuation
                 tickers.append(ticker)
-            with open("FTSE250.pickle", "wb") as f:
+            with open(filename, "wb") as f:
                 pickle.dump(tickers, f)
             return tickers
         return None
     except:
         print('Likely not a Wikipedia URL...')
 
+def dataframe_prices(dataframe = None):
+    if dataframe != None:
+        liveprice = AW.pull_live_price()
+        if liveprice != None:
+            df.loc[len(df)] = liveprice
+        return df
+    else:
+        print('Missing parameters in dataframe_prices')
+            
 
-#class LivePrice(Thread, picklepath="FTSE250.pickle", quantity=100):
-#    def pull_liveprice(picklepath="FTSE250.pickle", quantity=100):
-#        with open(picklepath, "rb") as f:
-#            tickers = pickle.load(f)
-#        
-#        # Get live price for tickers
-        
+if __name__ == '__main__':
+    # Required Parameters
+    tickercolumn = 0
+    ticker_size = 10
+    
+    # Get tickers from Wiki URL
+    webURL = 'http://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
+    filename = 'sb500tickers.pickle'
+    tickers = save_FTSE250_tickers(0, webURL, filename)
+    
+    # Make empty dataframe to append to
+    df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
+    
+    # Start webscraping threads
+    AW = AssignWorkers()
+    AW.assignworkers(tickerlist=tickers, tickerNo = ticker_size, workerNo = 5)
+    
+    # Append price list to dataframe
+    dataframe = dataframe_prices(dataframe = df)
+    
+    for i in range(0,20):
+        liveprice = AW.pull_live_price()
+        if liveprice != None:
+            df.loc[len(df)] = liveprice
+            print(df)
+        time.sleep(1)
+    AW.stop_all()
+    
 
-print(save_FTSE250_tickers(1, 'https://en.wikipedia.org/wiki/FTSE_250_Index'))
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

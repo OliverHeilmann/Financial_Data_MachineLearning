@@ -82,15 +82,16 @@ def stockmarket_openhours():
     hour = datetime.now(USA_East).hour
     
     # Simple logic to stop collecting data during market close
-    if 4 <= weekday <= 6:
-        if weekday == 4 and hour <= 17:
-            return True
-        elif weekday == 6 and hour >= 18:
-            return True
-        else:
-            return False
-    else:
-        return True
+#    if 4 <= weekday <= 6:
+#        if weekday == 4 and hour <= 17:
+#            return True
+#        elif weekday == 6 and hour >= 18:
+#            return True
+#        else:
+#            return False
+#    else:
+#        return True
+    return True
 
           
 # Main code with governing parameters

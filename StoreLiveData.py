@@ -81,17 +81,16 @@ def stockmarket_openhours():
     weekday = datetime.now(USA_East).weekday()
     hour = datetime.now(USA_East).hour
     
-#    # Simple logic to stop collecting data on weekend
-#    if 4 <= weekday <= 6:
-#        if weekday == 4 and hour <= 17:
-#            return True
-#        elif weekday == 6 and hour >= 18:
-#            return True
-#        else:
-#            return False
-#    else:
-#        return True
-    return True
+    # Simple logic to stop collecting data during market close
+    if 4 <= weekday <= 6:
+        if weekday == 4 and hour <= 17:
+            return True
+        elif weekday == 6 and hour >= 18:
+            return True
+        else:
+            return False
+    else:
+        return True
 
 # Upload .csv to github rep
 def upload_github():

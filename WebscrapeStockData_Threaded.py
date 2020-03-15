@@ -128,7 +128,7 @@ if __name__ == '__main__':
     GH = GithubUpdate()
     GH.start()
     time.sleep(0.5)
-    print(GH.upload_github())
+    GH.upload_github()
     
     # Testing webscraping threads
 #    AW = AssignWorkers()

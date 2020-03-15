@@ -128,7 +128,6 @@ if __name__ == '__main__':
                 
                 # Append price list to dataframe
                 for i in range(0,rows):
-                    print('running')
                     df = dataframe_prices(dataframe = df)
                     time.sleep(pull_step)
         

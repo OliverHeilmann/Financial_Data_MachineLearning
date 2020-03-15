@@ -130,7 +130,7 @@ if __name__ == '__main__':
     time.sleep(0.5)
     GH.upload_github()
     
-    # Testing webscraping threads
+     # Testing webscraping threads
 #    AW = AssignWorkers()
 #    AW.assignworkers(tickerlist=tickers, tickerNo = 100, workerNo = 5)
 #    for i in range(0,10):

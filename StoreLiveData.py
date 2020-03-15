@@ -83,9 +83,11 @@ def upload_github():
 # Main code with governing parameters
 if __name__ == '__main__':
     # Required Parameters
-    tickercolumn = 0
-    ticker_size = 10
-    threads = 5
+    tickercolumn = 0    # which column are tickers in
+    ticker_size = 10    # number of tickers used from Wiki URL
+    threads = 5         # number of threads pulling ticker data
+    pull_step = 1       # time (seconds) between price pull
+    rows = 60*60        # number of rows before csv is pushed to Github (1 hour)
     
     # Minute by Minute filename
     m_by_m = 'minute_by_minute.csv'
@@ -104,16 +106,16 @@ if __name__ == '__main__':
         df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
 
         # Append price list to dataframe
-        for i in range(0,20):
+        for i in range(0,rows):
             df = dataframe_prices(dataframe = df)
-            time.sleep(1)
+            time.sleep(pull_step)
 
         if not os.path.exists(m_by_m):
             df.to_csv(m_by_m)
             print(df)
             print('\nCreated file for minute by minute data\n{} rows added'.format(len(df)-1))
             upload_github()
-            print('UPLOADED TO GITHUB')
+            print('\nUPLOADED TO GITHUB\n')
             
         else:
             # Append dataframe to csv file
@@ -121,7 +123,7 @@ if __name__ == '__main__':
             print(df)
             print('\nAppended {} with more data\n{} rows added'.format(m_by_m, len(df)-1))
             upload_github()
-            print('UPLOADED TO GITHUB')
+            print('\nUPLOADED TO GITHUB\n')
    
     AW.stop_all()
     

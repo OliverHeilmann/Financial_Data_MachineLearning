@@ -145,7 +145,6 @@ if __name__ == '__main__':
                 print('\nMarkets are closed...\n')
                 time.sleep(60)
     except:
-        AW.stop_all()
         print('Error Thrown in Main Script')
     
     # Stop threads when exiting while loop

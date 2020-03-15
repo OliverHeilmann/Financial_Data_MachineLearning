@@ -48,8 +48,13 @@ class LivePrice(Thread):
 
 # Thread to upload csv file to Github
 class GithubUpdate(Thread):
-    def __init__(self, tickerlist = None):
+    def __init__(self):
+        self.terminationRequired = False
         Thread.__init__(self)
+    
+    def stop(self):
+        self.terminationRequired = True
+        print ("stopping")
     
     # Upload .csv to github rep
     def upload_github(self):
@@ -63,7 +68,9 @@ class GithubUpdate(Thread):
         print('\nUPLOADED TO GITHUB\n')
     
     def run(self):
-        pass
+        while self.terminationRequired == False:
+            time.sleep(0.01)
+            pass
            
 
 # Assign workers to tackle large ticker list
@@ -114,9 +121,12 @@ if __name__ == '__main__':
         with open(picklepath, "rb") as f:
             tickers = pickle.load(f)
     
-    AW = AssignWorkers()
-    AW.assignworkers(tickerlist=tickers, tickerNo = 100, workerNo = 5)
-    for i in range(0,10):
-        print(AW.pull_live_price())
-        time.sleep(2)
-    AW.stop_all()
+    gh = GithubUpdate()
+    gh.upload_github()
+    
+#    AW = AssignWorkers()
+#    AW.assignworkers(tickerlist=tickers, tickerNo = 100, workerNo = 5)
+#    for i in range(0,10):
+#        print(AW.pull_live_price())
+#        time.sleep(2)
+#    AW.stop_all()

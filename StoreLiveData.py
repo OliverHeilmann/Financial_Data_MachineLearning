@@ -116,6 +116,10 @@ if __name__ == '__main__':
     AW = AssignWorkers()
     AW.assignworkers(tickerlist=tickers, tickerNo=ticker_size, workerNo=threads)
     
+    # Initiate Github Thread
+    GH = GithubUpload()
+    GH.start()
+    
     try:
         while stockmarket_openhours()==True or trigger==False:
             if stockmarket_openhours()==True:
@@ -131,13 +135,13 @@ if __name__ == '__main__':
                     df.to_csv(m_by_m)
                     print(df)
                     print('\nCreated file for minute by minute data\n{} rows added'.format(len(df)-1))
-                    GithubUpdate.upload_github() 
+                    GH.upload_github() 
                 else:
                     # Append dataframe to csv file
                     df.to_csv(m_by_m, mode='a', header=False)
                     print(df)
                     print('\nAppended {} with more data\n{} rows added'.format(m_by_m, len(df)-1))
-                    GithubUpdate.upload_github()
+                    GH.upload_github()
                 
                 # trigger state changed to stop data collection on market close
                 trigger = True

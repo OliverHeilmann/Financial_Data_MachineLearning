@@ -122,6 +122,7 @@ if __name__ == '__main__':
             tickers = pickle.load(f)
     
     gh = GithubUpdate()
+    gh.start()
     gh.upload_github()
     
 #    AW = AssignWorkers()

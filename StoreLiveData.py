@@ -121,9 +121,12 @@ if __name__ == '__main__':
     tickercolumn = 0    # which column are tickers in
     ticker_size = 150   # number of tickers used from Wiki URL
     threads = 10        # number of threads pulling ticker data
-    pull_step = 1      # time (seconds) between price pull
-    rows = 5           # number of rows before csv is pushed to Github (1 hour)
+    pull_step = 60      # time (seconds) between price pull
+    rows = 60           # number of rows before csv is pushed to Github (1 hour)
     zone = timezone('Europe/London')    # set the timezone of stock market
+    LSE = True          # London Stock Exchange? If it is assign as 'True'. The
+                        # reason for this is the tickers require '.L' at end of
+                        # name to be detected in Yahoo Finance
     
     # Minute by Minute filename
     m_by_m = 'minute_by_minute.csv'
@@ -134,7 +137,7 @@ if __name__ == '__main__':
     webURL = 'https://en.wikipedia.org/wiki/FTSE_250_Index'
     filename = 'FTSE250.pickle'
 
-    tickers = save_tickers(1, webURL, filename, LSE=True)     #Note: look at column number
+    tickers = save_tickers(1, webURL, filename, LSE)     #Note: look at column number
     
     # Start webscraping threads
     AW = AssignWorkers()

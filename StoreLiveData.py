@@ -115,8 +115,8 @@ if __name__ == '__main__':
     tickercolumn = 0    # which column are tickers in
     ticker_size = 150   # number of tickers used from Wiki URL
     threads = 10        # number of threads pulling ticker data
-    pull_step = 1      # time (seconds) between price pull
-    rows = 5           # number of rows before csv is pushed to Github (1 hour)
+    pull_step = 60      # time (60 seconds) between price pull
+    rows = 60           # number of rows before csv is pushed to Github (1 hour)
     zone = timezone('Europe/London')    # set the timezone of stock market
     LSE = True          # London Stock Exchange? If it is assign as 'True'. The
                         # reason for this is the tickers require '.L' at end of
@@ -169,7 +169,7 @@ if __name__ == '__main__':
                     df.to_csv(m_by_m, mode='a', header=False)
                     print(df)
                     print('\nAppended {} with more data\n{} rows added'.format(m_by_m, len(df)-1))
-                    #GH.upload_github()
+                    GH.upload_github()
                 
                 # trigger state changed to stop data collection on market close
                 trigger = True

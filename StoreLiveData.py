@@ -155,11 +155,13 @@ if __name__ == '__main__':
                 # Make empty dataframe to append to
                 df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
                 
-                # Append price list to dataframe
+                # Append price list to dataframe if markets are open
                 for i in range(0,rows):
-                    df = dataframe_prices(dataframe = df)
-                    print('Collecting stock prices every {} seconds...'.format(pull_step))
-                    time.sleep(pull_step)
+                    # IF statement to check if markets are open
+                    if datetime.now(zone) <= m_close:
+                        df = dataframe_prices(dataframe = df)
+                        print('Collecting stock prices every {} seconds...'.format(pull_step))
+                        time.sleep(pull_step)
         
                 if not os.path.exists(m_by_m):
                     df.to_csv(m_by_m)

@@ -50,7 +50,7 @@ def check_tickers(tickers):
     print('Checking Tickers')
     for ticker in tickers:
         # Provide user with loading information of % completion
-        print('----> {} %'.format(round((tickers.index(ticker)+1)*100/len(tickers)),1))
+        print('----> {} %'.format(round((tickers.index(ticker)+1)*100/len(tickers),1)))
         try:
             val = si.get_live_price(ticker)
             if val != float(val):

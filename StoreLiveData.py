@@ -40,11 +40,30 @@ import pdb, time, os
 import string
 import pandas as pd
 from datetime import datetime
-from pytz import timezone   
+from pytz import timezone 
+from yahoo_fin import stock_info as si  
 from WebscrapeStockData_Threaded import AssignWorkers, GithubUpdate 
 
+
+# Ensure ticker returns results
+def check_tickers(tickers):
+    print('Checking Tickers')
+    for ticker in tickers:
+        # Provide user with loading information of % completion
+        print('----> {} %'.format(round((tickers.index(ticker)+1)*100/len(tickers)),1))
+        try:
+            val = si.get_live_price(ticker)
+            if val != float(val):
+                print('\n\n{} has not been found\n\n'.format(ticker))
+                tickers.remove(ticker)    
+        except:
+            print('\n\n{} has not been found\n\n'.format(ticker))
+            tickers.remove(ticker)
+    return tickers
+
+
 # Webscrape from Wikipedia URLs (consider non real time)
-def save_FTSE250_tickers(tickercolumn=0, website=None, filename=None):
+def save_tickers(tickercolumn=0, website=None, filename=None, LSE=False):
     try:
         if website != None:
             resp = requests.get(website)
@@ -54,7 +73,10 @@ def save_FTSE250_tickers(tickercolumn=0, website=None, filename=None):
             for row in table.findAll('tr')[1:]:
                 ticker = row.findAll('td')[tickercolumn].text.replace('\n', '').upper()
                 ticker = ticker.translate(str.maketrans('', '', string.punctuation)) #del punctuation
+                if LSE == True:
+                    ticker = ticker + '.L'
                 tickers.append(ticker)
+            tickers = check_tickers(tickers)
             with open(filename, "wb") as f:
                 pickle.dump(tickers, f)
             return tickers
@@ -75,11 +97,10 @@ def dataframe_prices(dataframe):
 
 
 # Eastern time required to determine open trading times
-def stockmarket_openhours():
+def stockmarket_openhours(tmzone=timezone('US/Eastern')):
     # Get time now
-    USA_East = timezone('US/Eastern')
-    weekday = datetime.now(USA_East).weekday()
-    hour = datetime.now(USA_East).hour
+    weekday = datetime.now(tmzone).weekday()
+    hour = datetime.now(tmzone).hour
     
     # Simple logic to stop collecting data during market close
     if 4 <= weekday <= 6:
@@ -100,8 +121,9 @@ if __name__ == '__main__':
     tickercolumn = 0    # which column are tickers in
     ticker_size = 150   # number of tickers used from Wiki URL
     threads = 10        # number of threads pulling ticker data
-    pull_step = 60      # time (seconds) between price pull
-    rows = 60           # number of rows before csv is pushed to Github (1 hour)
+    pull_step = 1      # time (seconds) between price pull
+    rows = 5           # number of rows before csv is pushed to Github (1 hour)
+    zone = timezone('Europe/London')    # set the timezone of stock market
     
     # Minute by Minute filename
     m_by_m = 'minute_by_minute.csv'
@@ -112,7 +134,7 @@ if __name__ == '__main__':
     webURL = 'https://en.wikipedia.org/wiki/FTSE_250_Index'
     filename = 'FTSE250.pickle'
 
-    tickers = save_FTSE250_tickers(0, webURL, filename)
+    tickers = save_tickers(1, webURL, filename, LSE=True)     #Note: look at column number
     
     # Start webscraping threads
     AW = AssignWorkers()
@@ -123,8 +145,8 @@ if __name__ == '__main__':
     GH = GithubUpdate();  GH.start()
     
     try:
-        while stockmarket_openhours()==True or trigger==False:
-            if stockmarket_openhours()==True:
+        while stockmarket_openhours(tmzone=zone)==True or trigger==False:
+            if stockmarket_openhours(tmzone=zone)==True:
                 # Make empty dataframe to append to
                 df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
                 

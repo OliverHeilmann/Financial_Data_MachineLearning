@@ -38,13 +38,15 @@ class LivePrice(Thread):
     
     # Thread will continually collect workpack finanical data
     def run(self):
-        if not self.tickerlist == None:
-            while not self.terminationRequired:
-                # Get live price for tickers
-                self.ticker_prices = [si.get_live_price(ticker) for ticker in self.tickerlist]
-        else:
-            print('No tickers passed...')
- 
+        try:
+            if not self.tickerlist == None:
+                while not self.terminationRequired:
+                    # Get live price for tickers
+                    self.ticker_prices = [si.get_live_price(ticker) for ticker in self.tickerlist]
+            else:
+                print('No tickers passed...')
+        except:
+            print('Error thrown in webscrape script- LivePrice')
 
 # Thread to upload csv file to Github
 class GithubUpdate(Thread):

@@ -107,8 +107,11 @@ if __name__ == '__main__':
     m_by_m = 'minute_by_minute.csv'
     
     # Get tickers from Wiki URL
-    webURL = 'http://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
-    filename = 'sp500tickers.pickle'
+    #webURL = 'http://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
+    #filename = 'sp500tickers.pickle'
+    webURL = 'https://en.wikipedia.org/wiki/FTSE_250_Index'
+    filename = 'FTSE250.pickle'
+
     tickers = save_FTSE250_tickers(0, webURL, filename)
     
     # Start webscraping threads

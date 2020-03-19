@@ -32,6 +32,9 @@ Notes:
     between these companies may drop so this should be considered later on. We
     will tackle this later on.
 
+1) stockmarket_openhours: should add public holidays and webscrape the trading
+                          times rather than require a manual input.
+
 '''
 import bs4 as bs
 import pickle
@@ -96,37 +99,35 @@ def dataframe_prices(dataframe):
         print('No dataframe passed to dataframe_prices')
 
 
-# Eastern time required to determine open trading times
-def stockmarket_openhours(tmzone=timezone('US/Eastern')):
-    # Get time now
+# Small function to send T/F logic for Exchange Trading Times
+def stockmarket_openhours(tmzone, m_open, m_close):
+    # Get day of week
     weekday = datetime.now(tmzone).weekday()
-    hour = datetime.now(tmzone).hour
-    
-    # Simple logic to stop collecting data during market close
-    if 4 <= weekday <= 6:
-        if weekday == 4 and hour <= 17:
-            return True
-        elif weekday == 6 and hour >= 18:
-            return True
-        else:
-            return False
-    else:
+    if m_open <= datetime.now(tmzone) <= m_close and weekday <= 4:
         return True
+    return False
 
           
 # Main code with governing parameters
 if __name__ == '__main__':
-    # Required Parameters
+    ############## MANUAL PARAMETERS REQUIRED TO BE SET BELOW ################
     trigger = False     # trigger to stop collecting data on market close
     tickercolumn = 0    # which column are tickers in
     ticker_size = 150   # number of tickers used from Wiki URL
     threads = 10        # number of threads pulling ticker data
-    pull_step = 60      # time (seconds) between price pull
-    rows = 60           # number of rows before csv is pushed to Github (1 hour)
+    pull_step = 1      # time (seconds) between price pull
+    rows = 5           # number of rows before csv is pushed to Github (1 hour)
     zone = timezone('Europe/London')    # set the timezone of stock market
     LSE = True          # London Stock Exchange? If it is assign as 'True'. The
                         # reason for this is the tickers require '.L' at end of
                         # name to be detected in Yahoo Finance
+    
+    # Set Market Open/ Close times
+    now = datetime.now(zone)
+    m_open = now.replace(hour=8, minute=0, second=0, microsecond=0)
+    m_close = now.replace(hour=16, minute=30, second=0, microsecond=0)
+    
+    ####################### END OF MANUAL PARAMETERS #########################
     
     # Minute by Minute filename
     m_by_m = 'minute_by_minute.csv'
@@ -148,8 +149,8 @@ if __name__ == '__main__':
     GH = GithubUpdate();  GH.start()
     
     try:
-        while stockmarket_openhours(tmzone=zone)==True or trigger==False:
-            if stockmarket_openhours(tmzone=zone)==True:
+        while stockmarket_openhours(zone, m_open, m_close)==True or trigger==False:
+            if stockmarket_openhours(zone, m_open, m_close)==True:
                 # Make empty dataframe to append to
                 df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
                 
@@ -168,7 +169,7 @@ if __name__ == '__main__':
                     df.to_csv(m_by_m, mode='a', header=False)
                     print(df)
                     print('\nAppended {} with more data\n{} rows added'.format(m_by_m, len(df)-1))
-                    GH.upload_github()
+                    #GH.upload_github()
                 
                 # trigger state changed to stop data collection on market close
                 trigger = True

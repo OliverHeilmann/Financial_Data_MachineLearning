@@ -92,6 +92,7 @@ def save_tickers(tickercolumn=0, website=None, filename=None, LSE=False):
 def dataframe_prices(dataframe):
     if dataframe.size >= 0:
         liveprice = AW.pull_live_price()
+        # Append dataframe with new data
         if liveprice != None:
             df.loc[len(df)] = liveprice
         return df
@@ -111,7 +112,6 @@ def stockmarket_openhours(tmzone, m_open, m_close):
 # Main code with governing parameters
 if __name__ == '__main__':
     ############## MANUAL PARAMETERS REQUIRED TO BE SET BELOW ################
-    trigger = False     # trigger to stop collecting data on market close
     tickercolumn = 0    # which column are tickers in
     ticker_size = 150   # number of tickers used from Wiki URL
     threads = 10        # number of threads pulling ticker data
@@ -122,12 +122,10 @@ if __name__ == '__main__':
                         # reason for this is the tickers require '.L' at end of
                         # name to be detected in Yahoo Finance
     
-    # Set Market Open/ Close times
+    # Set Market Open/ Close times (must add the times in)
     now = datetime.now(zone)
     m_open = now.replace(hour=8, minute=0, second=0, microsecond=0)
     m_close = now.replace(hour=16, minute=30, second=0, microsecond=0)
-    
-    ####################### END OF MANUAL PARAMETERS #########################
     
     # Minute by Minute filename
     m_by_m = 'minute_by_minute.csv'
@@ -137,8 +135,10 @@ if __name__ == '__main__':
     #filename = 'sp500tickers.pickle'
     webURL = 'https://en.wikipedia.org/wiki/FTSE_250_Index'
     filename = 'FTSE250.pickle'
+    
+    ####################### END OF MANUAL PARAMETERS #########################
 
-    tickers = save_tickers(1, webURL, filename, LSE)     #Note: look at column number
+    tickers = save_tickers(tickercolumn, webURL, filename, LSE)     
     
     # Start webscraping threads
     AW = AssignWorkers()
@@ -148,8 +148,9 @@ if __name__ == '__main__':
     # during github upload)
     GH = GithubUpdate();  GH.start()
     
+    #Main loop giving stock collection instructions
     try:
-        while stockmarket_openhours(zone, m_open, m_close)==True or trigger==False:
+        while True:
             if stockmarket_openhours(zone, m_open, m_close)==True:
                 # Make empty dataframe to append to
                 df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
@@ -157,12 +158,13 @@ if __name__ == '__main__':
                 # Append price list to dataframe
                 for i in range(0,rows):
                     df = dataframe_prices(dataframe = df)
+                    print('Collecting stock prices every {} seconds...'.format(pull_step))
                     time.sleep(pull_step)
         
                 if not os.path.exists(m_by_m):
                     df.to_csv(m_by_m)
                     print(df)
-                    print('\nCreated file for minute by minute data\n{} rows added'.format(len(df)-1))
+                    print('\n\nCreated file for minute by minute data\n{} rows added\n\n'.format(len(df)-1))
                     GH.upload_github() 
                 else:
                     # Append dataframe to csv file
@@ -170,9 +172,6 @@ if __name__ == '__main__':
                     print(df)
                     print('\nAppended {} with more data\n{} rows added'.format(m_by_m, len(df)-1))
                     GH.upload_github()
-                
-                # trigger state changed to stop data collection on market close
-                trigger = True
             else:
                 print('\nMarkets are closed...\n')
                 time.sleep(pull_step)

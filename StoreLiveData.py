@@ -149,11 +149,11 @@ if __name__ == '__main__':
     GH = GithubUpdate();  GH.start()
     GH.upload_github()  # ensure Github and script are up to date
     time.sleep(5)
-    
+    trig = True
     #Main loop giving stock collection instructions
     try:
         while True:
-            if stockmarket_openhours(zone, m_open, m_close)==True:
+            if stockmarket_openhours(zone, m_open, m_close)==True and trig ==True:
                 # Make empty dataframe to append to
                 df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
                 
@@ -176,9 +176,11 @@ if __name__ == '__main__':
                     print(df)
                     print('\nAppended {} with more data\n{} rows added'.format(m_by_m, len(df)-1))
                     GH.upload_github()
+                trig = False
             else:
                 print('\nMarkets are closed...\n')
                 time.sleep(pull_step)
+                trig = True
     except:
         print('Error Thrown in Main Script')
     

@@ -79,7 +79,7 @@ def save_tickers(tickercolumn=0, website=None, filename=None, LSE=False):
                 if LSE == True:
                     ticker = ticker + '.L'
                 tickers.append(ticker)
-            tickers = check_tickers(tickers)
+            tickers = check_tickers(tickers[:10])
             with open(filename, "wb") as f:
                 pickle.dump(tickers, f)
             return tickers
@@ -115,8 +115,8 @@ if __name__ == '__main__':
     tickercolumn = 1    # which column are tickers in
     ticker_size = 150   # number of tickers used from Wiki URL
     threads = 10        # number of threads pulling ticker data
-    pull_step = 60      # time (60 seconds) between price pull
-    rows = 60           # number of rows before csv is pushed to Github (1 hour)
+    pull_step = 1      # time (60 seconds) between price pull
+    rows = 10           # number of rows before csv is pushed to Github (1 hour)
     zone = timezone('Europe/London')    # set the timezone of stock market
     LSE = True          # London Stock Exchange? If it is assign as 'True'. The
                         # reason for this is the tickers require '.L' at end of

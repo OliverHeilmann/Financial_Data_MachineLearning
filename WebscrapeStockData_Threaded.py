@@ -18,8 +18,9 @@ import time
 
 # Thread to collect live stock data
 class LivePrice(Thread):
-    def __init__(self, tickerlist = None):
+    def __init__(self, tickerlist = None, taskno = None):
         self.tickerlist = tickerlist
+        self.taskno = str(taskno)
         self.ticker_prices = []
         self.has_been_called=False
         self.terminationRequired = False
@@ -28,7 +29,6 @@ class LivePrice(Thread):
     # Stop thread from running
     def stop(self):
         self.terminationRequired = True
-        print ("stopping")
     
     # Pull ticker prices from thread
     def prices(self):
@@ -38,15 +38,17 @@ class LivePrice(Thread):
     
     # Thread will continually collect workpack finanical data
     def run(self):
-        try:
-            if not self.tickerlist == None:
-                while not self.terminationRequired:
+        if not self.tickerlist == None:
+            while not self.terminationRequired:
+                try:
                     # Get live price for tickers
                     self.ticker_prices = [si.get_live_price(ticker) for ticker in self.tickerlist]
-            else:
-                print('No tickers passed...')
-        except:
-            print('Error thrown in webscrape script- LivePrice')
+                except:
+                     print('Error thrown in webscrape script- LivePrice')
+        else:
+            print('No tickers passed...')
+        print('Thread {} has stopped running'.format(self.taskno))
+       
 
 # Thread to upload csv file to Github
 class GithubUpdate(Thread):
@@ -83,7 +85,7 @@ class AssignWorkers():
     # Stop all threads from running
     def stop_all(self):
         [workers['worker{}'.format(i)].stop() for i in range(0, len(workers))]
-        print('Stopped all threads...')
+        print('Command to Stop Threads Passed...')
     
     # Pull tickerlist prices from all threads
     def pull_live_price(self):
@@ -108,7 +110,7 @@ class AssignWorkers():
                 workpack = tickerlist[:tickerNo][first:last]
                 
                 # assign numbers to workers & start working
-                workers["worker" + str(task)] = LivePrice(tickerlist=workpack)
+                workers["worker" + str(task)] = LivePrice(tickerlist=workpack, taskno=task)
                 workers["worker" + str(task)].start()
 
                 first += division

@@ -79,7 +79,7 @@ def save_tickers(tickercolumn=0, website=None, filename=None, LSE=False):
                 if LSE == True:
                     ticker = ticker + '.L'
                 tickers.append(ticker)
-            tickers = check_tickers(tickers[:10])
+            tickers = check_tickers(tickers[:ticker_size])  # check tickers
             with open(filename, "wb") as f:
                 pickle.dump(tickers, f)
             return tickers

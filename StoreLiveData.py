@@ -137,7 +137,8 @@ if __name__ == '__main__':
     picklename = 'FTSE250.pickle'
     
     ####################### END OF MANUAL PARAMETERS #########################
-
+    
+    # Collect list of tickers
     tickers = save_tickers(tickercolumn, webURL, picklename, LSE)     
     
     # Start webscraping threads

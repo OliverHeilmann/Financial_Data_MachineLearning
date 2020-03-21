@@ -14,7 +14,7 @@ from threading import Thread
 import pickle, os, math
 from yahoo_fin import stock_info as si
 from datetime import datetime
-import time
+import time, sys
 
 # Thread to collect live stock data
 class LivePrice(Thread):
@@ -46,6 +46,8 @@ class LivePrice(Thread):
                     self.ticker_prices = [si.get_live_price(ticker) for ticker in self.tickerlist]
                 except:
                      print('Error thrown in Thread {}'.format(self.taskno))
+                     print("Unexpected error:", sys.exc_info()[0])
+                     raise
         else:
             print('No tickers passed...')
         print('Thread {} has stopped running'.format(self.taskno))

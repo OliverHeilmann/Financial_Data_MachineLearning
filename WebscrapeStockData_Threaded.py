@@ -93,11 +93,11 @@ class AssignWorkers():
         # a final pricelist. Second for loop extracts the elements from the 
         # thread list.
         pricelist = [i for j in range(0,len(workers)) for i in workers['worker{}'.format(j)].prices()]
-        for i in pricelist:
-            if i == None: 
-                print('Wait for data to be collected...')
-                return None
         pricelist.insert(0,datetime.now())
+        for i in pricelist:
+            if i == None:
+                pricelist = None
+                break
         return pricelist
     
     # Define number of tickers and threads to run
@@ -119,7 +119,7 @@ class AssignWorkers():
     
 # Use for testing  
 if __name__ == '__main__': 
-    print('MAIN SCRIPT:\n')
+    print('\nMAIN SCRIPT:\n')
     
     picklepath = 'sp500tickers.pickle'
     if not os.path.exists(picklepath):
@@ -134,10 +134,10 @@ if __name__ == '__main__':
 #    time.sleep(0.5)
 #    GH.upload_github()
 #    
-#    # Testing webscraping threads
-#    AW = AssignWorkers()
-#    AW.assignworkers(tickerlist=tickers, tickerNo = 100, workerNo = 5)
-#    for i in range(0,10):
-#        print(AW.pull_live_price())
-#        time.sleep(2)
-#    AW.stop_all()
+    # Testing webscraping threads
+    AW = AssignWorkers()
+    AW.assignworkers(tickerlist=tickers, tickerNo = 100, workerNo = 5)
+    for i in range(0,10):
+        print(AW.pull_live_price())
+        time.sleep(2)
+    AW.stop_all()

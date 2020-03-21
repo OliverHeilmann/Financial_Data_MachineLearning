@@ -53,14 +53,14 @@ class LivePrice(Thread):
 
 # Thread to upload csv file to Github
 class GithubUpdate(Thread):
-    def __init__(self):
+    def __init__(self, filepath=None):
         self.trigger = False
+        self.filepath = filepath
         self.terminationRequired = False
         Thread.__init__(self)
     
     def stop(self):
         self.terminationRequired = True
-        print ("stopping")
     
     # Upload .csv to github rep
     def upload_github(self):
@@ -69,16 +69,16 @@ class GithubUpdate(Thread):
     def run(self):
         while self.terminationRequired == False:
             if self.trigger == True:
-                os.system("git status")
+                os.system("git add {}".format(self.filepath))
                 time.sleep(1)
-                os.system("git add .")
+                os.system("git status")
                 time.sleep(1)
                 os.system("git commit -m 'added'")
                 time.sleep(1)
                 os.system("git push")
-                print('\nUPLOADED TO GITHUB\n')
                 self.trigger=False
             time.sleep(0.1)
+        print('Github thread has stopped running')
 
 
 # Assign workers to tackle large ticker list

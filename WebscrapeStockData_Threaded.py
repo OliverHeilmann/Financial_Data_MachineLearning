@@ -20,7 +20,7 @@ import time
 class LivePrice(Thread):
     def __init__(self, tickerlist = None, taskno = None):
         self.tickerlist = tickerlist
-        self.taskno = str(taskno)
+        self.taskno = str(taskno+1)
         self.ticker_prices = []
         self.has_been_called=False
         self.terminationRequired = False
@@ -39,6 +39,7 @@ class LivePrice(Thread):
     # Thread will continually collect workpack finanical data
     def run(self):
         if not self.tickerlist == None:
+            print('Thread {} has started running\n'.format(self.taskno))
             while not self.terminationRequired:
                 try:
                     # Get live price for tickers
@@ -94,6 +95,8 @@ class AssignWorkers():
         # thread list.
         pricelist = [i for j in range(0,len(workers)) for i in workers['worker{}'.format(j)].prices()]
         pricelist.insert(0,datetime.now())
+        # If any elements are None, return empty list to tell main script that
+        # the threads are still collating ticker financial data.
         for i in pricelist:
             if i == None:
                 pricelist = None

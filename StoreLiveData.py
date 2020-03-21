@@ -75,7 +75,7 @@ def save_tickers(tickercolumn=0, website=None, filename=None, LSE=False):
             tickers = []
             for row in table.findAll('tr')[1:]:
                 ticker = row.findAll('td')[tickercolumn].text.replace('\n', '').upper()
-                ticker = ticker.translate(str.maketrans('', '', string.punctuation)) #del punctuation
+                ticker = ticker.translate(str.maketrans('', '', string.punctuation))
                 if LSE == True:
                     ticker = ticker + '.L'
                 tickers.append(ticker)
@@ -113,7 +113,7 @@ def stockmarket_openhours(tmzone, m_open, m_close):
 if __name__ == '__main__':
     ############## MANUAL PARAMETERS REQUIRED TO BE SET BELOW ################
     tickercolumn = 1    # which column are tickers in
-    ticker_size = 150   # number of tickers used from Wiki URL
+    ticker_size = 10   # number of tickers used from Wiki URL
     threads = 10        # number of threads pulling ticker data
     pull_step = 60      # time (60 seconds) between price pull
     rows = 60           # number of rows before csv is pushed to Github (1 hour)
@@ -128,17 +128,17 @@ if __name__ == '__main__':
     m_close = now.replace(hour=16, minute=30, second=0, microsecond=0)
     
     # Minute by Minute filename
-    m_by_m = 'minute_by_minute.csv'
+    filename = 'minute_by_minute.csv'
     
     # Get tickers from Wiki URL
     #webURL = 'http://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
     #filename = 'sp500tickers.pickle'
     webURL = 'https://en.wikipedia.org/wiki/FTSE_250_Index'
-    filename = 'FTSE250.pickle'
+    picklename = 'FTSE250.pickle'
     
     ####################### END OF MANUAL PARAMETERS #########################
 
-    tickers = save_tickers(tickercolumn, webURL, filename, LSE)     
+    tickers = save_tickers(tickercolumn, webURL, picklename, LSE)     
     
     # Start webscraping threads
     AW = AssignWorkers()
@@ -149,6 +149,7 @@ if __name__ == '__main__':
     GH = GithubUpdate();  GH.start()
     GH.upload_github()  # ensure Github and script are up to date
     time.sleep(5)
+    
     #Main loop giving stock collection instructions
     try:
         while True:
@@ -164,22 +165,22 @@ if __name__ == '__main__':
                         print('Collecting stock prices every {} seconds...'.format(pull_step))
                         time.sleep(pull_step)
         
-                if not os.path.exists(m_by_m):
-                    df.to_csv(m_by_m)
+                if not os.path.exists(filename):
+                    df.to_csv(filename)
                     print(df)
-                    print('\n\nCreated file for minute by minute data\n{} rows added\n\n'.format(len(df)-1))
+                    print('\n\nCreated filepath...\n{} rows added\n\n'.format(len(df)-1))
                     GH.upload_github() 
                 else:
                     # Append dataframe to csv file
-                    df.to_csv(m_by_m, mode='a', header=False)
+                    df.to_csv(filename, mode='a', header=False)
                     print(df)
-                    print('\nAppended {} with more data\n{} rows added'.format(m_by_m, len(df)-1))
+                    print('\nAppended {}...\n{} rows added\b'.format(filename, len(df)))
                     GH.upload_github()
             else:
-                print('\nMarkets are closed...\n')
+                print('Markets are closed...\n')
                 time.sleep(pull_step)
     except:
-        print('Error Thrown in Main Script')
+        print('Exiting Main Loop...')
     
     # Stop threads when exiting while loop
     AW.stop_all()

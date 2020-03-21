@@ -113,10 +113,10 @@ def stockmarket_openhours(tmzone, m_open, m_close):
 if __name__ == '__main__':
     ############## MANUAL PARAMETERS REQUIRED TO BE SET BELOW ################
     tickercolumn = 1    # which column are tickers in
-    ticker_size = 10   # number of tickers used from Wiki URL
+    ticker_size = 250   # number of tickers used from Wiki URL
     threads = 10        # number of threads pulling ticker data
-    pull_step = 1      # time (60 seconds) between price pull
-    rows = 10           # number of rows before csv is pushed to Github (1 hour)
+    pull_step = 60      # time (60 seconds) between price pull
+    rows = 15           # number of rows before csv is pushed to Github (1 hour)
     zone = timezone('Europe/London')    # set the timezone of stock market
     LSE = True          # London Stock Exchange? If it is assign as 'True'. The
                         # reason for this is the tickers require '.L' at end of
@@ -153,14 +153,14 @@ if __name__ == '__main__':
     #Main loop giving stock collection instructions
     try:
         while True:
-            if stockmarket_openhours(zone, m_open, m_close)==False:#########
+            if stockmarket_openhours(zone, m_open, m_close)==True:
                 # Make empty dataframe to append to
                 df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
                 
                 # Append price list to dataframe if markets are open
                 for i in range(0,rows):
                     # IF statement to check if markets are open
-                    if datetime.now(zone) >= m_close:#######
+                    if datetime.now(zone) <= m_close:
                         df = dataframe_prices(dataframe = df)
                         print('Collecting stock prices every {} seconds...'.format(pull_step))
                         time.sleep(pull_step)

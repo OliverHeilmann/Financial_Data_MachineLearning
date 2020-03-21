@@ -45,7 +45,7 @@ class LivePrice(Thread):
                     # Get live price for tickers
                     self.ticker_prices = [si.get_live_price(ticker) for ticker in self.tickerlist]
                 except:
-                     print('Error thrown in webscrape script- LivePrice')
+                     print('Error thrown in Thread {}'.format(self.taskno))
         else:
             print('No tickers passed...')
         print('Thread {} has stopped running'.format(self.taskno))

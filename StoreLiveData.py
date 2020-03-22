@@ -9,33 +9,19 @@ My next task is to webscrape minute by minute data for FTSE 500 companies.
 7 days of data should be sufficient here as this is 604,800 total sample which
 is likely far more than is required.
 
-Reqs:
-    -upload regularly to github. This means regular pushes (and pulls to reduce
-     load on the computer)
-    -crash prevention/ preventative measures
-    -real time public holiday and non-trading hours web scraping
-    -create new github account for Jetson and allow admin rights so that it 
-     does not interfere with my projects
-    -If companies fall out of FTSE 500 they should still be tracked. Any new 
-     companies entering will be added to the tracked list as well- pickle this
-     list.
-
-Other:
-    -web traffic bot
-"""
-
-
-'''
-Notes: 
-    -Ok, webscrape FTSE 250 and use top 150. If they fall below the 150 mark 
+Notes:
+    - Ok, webscrape FTSE 250 and use top 150. If they fall below the 150 mark 
     stil track them. If they fall outside 250 then whoops!The correlation 
     between these companies may drop so this should be considered later on. We
     will tackle this later on.
+    - stockmarket_openhours: should add public holidays and webscrape the 
+    trading times rather than require a manual input.
 
-1) stockmarket_openhours: should add public holidays and webscrape the trading
-                          times rather than require a manual input.
+Other:
+    -web traffic bot
 
-'''
+"""
+
 import bs4 as bs
 import pickle
 import requests
@@ -186,12 +172,13 @@ if __name__ == '__main__':
     except:
         print('Exiting Main Loop...')
     
-    # Stop threads when exiting while loop
-    AW.stop_all()   # stop workers
-    GH.stop()       # stop Github
-    
-    # Alert user that collecting has finished
-    print('''
-            ###############################\n
-            No more data will be collected.\n
-            ###############################''')  
+    finally:
+        # Stop threads when exiting while loop
+        AW.stop_all()   # stop workers
+        GH.stop()       # stop Github
+        
+        # Alert user that collecting has finished
+        print('''
+                ###############################\n
+                No more data will be collected.\n
+                ###############################''')

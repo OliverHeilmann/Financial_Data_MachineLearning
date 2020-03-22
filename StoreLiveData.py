@@ -116,7 +116,7 @@ if __name__ == '__main__':
     ############## MANUAL PARAMETERS REQUIRED TO BE SET BELOW ################
     tickercolumn = 1    # which column are tickers in
     ticker_size = 250   # number of tickers used from Wiki URL
-    threads = 8         # number of threads pulling ticker data (1 per CPU core)
+    threads = 10        # number of threads pulling ticker data (1 per CPU core)
     pull_step = 60      # time (60 seconds) between price pull
     rows = 15           # number of rows before csv is pushed to Github (1 hour)
     zone = timezone('Europe/London')    # set the timezone of stock market
@@ -156,14 +156,14 @@ if __name__ == '__main__':
     #Main loop giving stock collection instructions
     try:
         while True:
-            if stockmarket_openhours(zone, m_open, m_close)==False:
+            if stockmarket_openhours(zone, m_open, m_close)==True:
                 # Make empty dataframe to append to
                 df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
                 
                 # Append price list to dataframe if markets are open
                 for i in range(0,rows):
                     # IF statement to check if markets are open
-                    if datetime.now(zone) >= m_close:
+                    if datetime.now(zone) <= m_close:
                         df = dataframe_prices(dataframe = df)
                         print('Collecting stock prices every {} seconds...'.format(pull_step))
                         time.sleep(pull_step)
@@ -172,13 +172,13 @@ if __name__ == '__main__':
                     df.to_csv(filename)
                     print(df)
                     print('\n\nCreated filepath...\n{} rows added\n\n'.format(len(df)-1))
-                    #GH.upload_github() 
+                    GH.upload_github() 
                 else:
                     # Append dataframe to csv file
                     df.to_csv(filename, mode='a', header=False)
                     print(df)
                     print('\nAppended {}...\n{} rows added\b'.format(filename, len(df)))
-                    #GH.upload_github()
+                    GH.upload_github()
             else:
                 print('Markets are closed...\n')
                 time.sleep(pull_step)

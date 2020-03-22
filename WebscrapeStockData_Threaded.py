@@ -21,7 +21,7 @@ import numpy as np
 import pickle, os, math
 from yahoo_fin import stock_info as si
 from datetime import datetime
-import time, sys
+import time, sys, pdb
 
 # Thread to collect live stock data
 class LivePrice(Thread):
@@ -29,7 +29,6 @@ class LivePrice(Thread):
         self.tickerlist = tickerlist  # List of tickers
         self.taskno = str(taskno+1)   # String for printing in terminal
         self.ticker_prices = np.zeros(len(tickerlist))   # List of ticker prices
-        #self.ticker_prices = []
         self.trigger = False          # Indicate to user thread still functional
         self.has_been_called=False
         self.terminationRequired = False
@@ -41,7 +40,7 @@ class LivePrice(Thread):
     
     # Pull ticker prices from thread
     def prices(self):
-        if self.ticker_prices == [] or i == float(0) or i == int(0):
+        if len(self.ticker_prices) == 0:
             return [None]
         return self.ticker_prices
     
@@ -50,32 +49,13 @@ class LivePrice(Thread):
         if self.tickerlist != None and self.tickerlist != []:
             print('Thread {} has started running\n'.format(self.taskno))
             while not self.terminationRequired:
-                try:
-                    if self.trigger == True:
-                        print('Thread {} continuing...'.format(self.taskno))
-                        print(self.ticker_prices)
-                        print(self.tickerlist)
-                        self.trigger = False
-                    
-                    # Get live price for tickers
-                    #self.ticker_prices = [si.get_live_price(ticker) for ticker in self.tickerlist]
-
-                    for i in range(0, len(self.tickerlist)):
-                        try:
-                            self.ticker_prices[i] = si.get_live_price(self.tickerlist[i])
-                        except:
-                            print('{} failed'.format(self.tickerlist[i]))
-                
-                except:
-                    self.trigger = True                   
-                    print('Error thrown in Thread {}'.format(self.taskno))
-                    
-                    #for i in range(0, len(self.tickerlist)):
-                    #    self.ticker_prices[-i] = si.get_live_price(self.tickerlist[-i])
-
-                    
-                    #print("Unexpected error:", sys.exc_info()[0])
-                    #raise
+                for i in range(0, len(self.tickerlist)):
+                    try:
+                        self.ticker_prices[i] = si.get_live_price(self.tickerlist[i])
+                    except:
+                        print('----> {} failed...'.format(self.tickerlist[i]))
+                        #print("Unexpected error:", sys.exc_info()[0])
+                        #raise
         else:
             print('No tickers passed...')
         print('Thread {} has stopped running'.format(self.taskno))
@@ -128,7 +108,7 @@ class AssignWorkers():
         # If any elements are None, return empty list to tell main script that
         # the threads are still collating ticker financial data.
         for i in pricelist:
-            if i == None:
+            if i == None or i == 0.:
                 pricelist = [None]
                 break
         return pricelist
@@ -141,6 +121,7 @@ class AssignWorkers():
             first = 0; last = division; workers = {}
             for task in range(0, workerNo):
                 workpack = tickerlist[:tickerNo][first:last]
+                pdb.set_trace()
                 
                 # assign numbers to workers & start working
                 workers["worker" + str(task)] = LivePrice(tickerlist=workpack, taskno=task)
@@ -161,7 +142,7 @@ if __name__ == '__main__':
         with open(picklepath, "rb") as f:
             tickers = pickle.load(f)
     
-#    # Testing Github thread
+    # Testing Github thread
 #    GH = GithubUpdate()
 #    GH.start()
 #    time.sleep(0.5)

@@ -61,8 +61,11 @@ class LivePrice(Thread):
                     #self.ticker_prices = [si.get_live_price(ticker) for ticker in self.tickerlist]
 
                     for i in range(0, len(self.tickerlist)):
-                        self.ticker_prices[i] = si.get_live_price(self.tickerlist[i])
-
+                        try:
+                            self.ticker_prices[i] = si.get_live_price(self.tickerlist[i])
+                        except:
+                            print('{} failed'.format(self.tickerlist[i]))
+                
                 except:
                     self.trigger = True                   
                     print('Error thrown in Thread {}'.format(self.taskno))

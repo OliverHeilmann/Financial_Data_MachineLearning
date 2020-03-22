@@ -51,8 +51,8 @@ class LivePrice(Thread):
                 except:
                     self.trigger = True                   
                     print('Error thrown in Thread {}'.format(self.taskno))
-                    print("Unexpected error:", sys.exc_info()[0])
-                    raise
+                    #print("Unexpected error:", sys.exc_info()[0])
+                    #raise
         else:
             print('No tickers passed...')
         print('Thread {} has stopped running'.format(self.taskno))
@@ -75,7 +75,7 @@ class GithubUpdate(Thread):
 
     def run(self):
         while self.terminationRequired == False:
-            if self.trigger == True:
+            if self.trigger == True and os.path.exists(self.filepath):
                 os.system("git add {}".format(self.filepath))
                 time.sleep(1)
                 os.system("git status")

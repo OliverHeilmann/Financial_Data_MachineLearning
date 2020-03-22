@@ -121,7 +121,6 @@ class AssignWorkers():
             first = 0; last = division; workers = {}
             for task in range(0, workerNo):
                 workpack = tickerlist[:tickerNo][first:last]
-                pdb.set_trace()
                 
                 # assign numbers to workers & start working
                 workers["worker" + str(task)] = LivePrice(tickerlist=workpack, taskno=task)

@@ -68,6 +68,11 @@ class LivePrice(Thread):
                 except:
                     self.trigger = True                   
                     print('Error thrown in Thread {}'.format(self.taskno))
+                    
+                    #for i in range(0, len(self.tickerlist)):
+                    #    self.ticker_prices[-i] = si.get_live_price(self.tickerlist[-i])
+
+                    
                     #print("Unexpected error:", sys.exc_info()[0])
                     #raise
         else:

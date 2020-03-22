@@ -85,7 +85,6 @@ def save_tickers(tickercolumn=0, website=None, filename=None, LSE=False):
             # Save tickers to a pickle file
             with open(filename, "wb") as f:
                 pickle.dump(tickers, f)
-            print(tickers)
             return tickers
         return None
     except:

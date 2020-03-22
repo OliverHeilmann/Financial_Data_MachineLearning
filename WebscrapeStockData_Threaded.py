@@ -45,7 +45,11 @@ class LivePrice(Thread):
                 try:
                     if self.trigger == True:
                         print('Thread {} continuing...'.format(self.taskno))
+                        print(self.tickerlist)
+                        for i in self.tickerlist:
+                            print(si.get_live_price(i))
                         self.trigger = False
+                    
                     # Get live price for tickers
                     self.ticker_prices = [si.get_live_price(ticker) for ticker in self.tickerlist]
                 except:

@@ -41,7 +41,7 @@ class LivePrice(Thread):
     
     # Pull ticker prices from thread
     def prices(self):
-        if self.ticker_prices == []:
+        if self.ticker_prices == [] or i == float(0) or i == int(0):
             return [None]
         return self.ticker_prices
     
@@ -61,7 +61,6 @@ class LivePrice(Thread):
 
                     for i in range(0, len(self.tickerlist)):
                         self.ticker_prices[i] = si.get_live_price(self.tickerlist[i])
-                        print(self.ticker_prices)
 
                 except:
                     self.trigger = True                   

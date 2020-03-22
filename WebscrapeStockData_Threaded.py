@@ -19,9 +19,10 @@ import time, sys
 # Thread to collect live stock data
 class LivePrice(Thread):
     def __init__(self, tickerlist = None, taskno = None):
-        self.tickerlist = tickerlist
-        self.taskno = str(taskno+1)
-        self.ticker_prices = []
+        self.tickerlist = tickerlist  # List of tickers
+        self.taskno = str(taskno+1)   # String for printing in terminal
+        self.ticker_prices = []       # List of ticker prices
+        self.trigger = False          # Indicate to user thread still functional
         self.has_been_called=False
         self.terminationRequired = False
         Thread.__init__(self)
@@ -42,12 +43,16 @@ class LivePrice(Thread):
             print('Thread {} has started running\n'.format(self.taskno))
             while not self.terminationRequired:
                 try:
+                    if self.trigger == True:
+                        print('Thread {} continuing...'.format(self.taskno))
+                        self.trigger = False
                     # Get live price for tickers
                     self.ticker_prices = [si.get_live_price(ticker) for ticker in self.tickerlist]
                 except:
-                     print('Error thrown in Thread {}'.format(self.taskno))
-                     print("Unexpected error:", sys.exc_info()[0])
-                     raise
+                    self.trigger = True                   
+                    print('Error thrown in Thread {}'.format(self.taskno))
+                    print("Unexpected error:", sys.exc_info()[0])
+                    raise
         else:
             print('No tickers passed...')
         print('Thread {} has stopped running'.format(self.taskno))
@@ -101,7 +106,7 @@ class AssignWorkers():
         # the threads are still collating ticker financial data.
         for i in pricelist:
             if i == None:
-                pricelist = None
+                pricelist = [None]
                 break
         return pricelist
     
@@ -142,7 +147,7 @@ if __name__ == '__main__':
     # Testing webscraping threads
     AW = AssignWorkers()
     AW.assignworkers(tickerlist=tickers, tickerNo = 100, workerNo = 5)
-    for i in range(0,10):
-        print(AW.pull_live_price())
+    for i in range(0,100):
+        print(len(AW.pull_live_price()))
         time.sleep(2)
     AW.stop_all()

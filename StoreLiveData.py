@@ -93,7 +93,7 @@ def dataframe_prices(dataframe):
     if dataframe.size >= 0:
         liveprice = AW.pull_live_price()
         # Append dataframe with new data
-        if liveprice != None:
+        if liveprice != [None]:
             df.loc[len(df)] = liveprice
         return df
     else:

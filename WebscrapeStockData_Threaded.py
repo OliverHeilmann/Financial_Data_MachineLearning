@@ -35,6 +35,8 @@ class LivePrice(Thread):
     def prices(self):
         if self.ticker_prices == []:
             return [None]
+        elif len(self.tickerlist) != len(self.ticker_prices):
+            print('             lengths not equal')
         return self.ticker_prices
     
     # Thread will continually collect workpack finanical data
@@ -49,8 +51,12 @@ class LivePrice(Thread):
                         self.trigger = False
                     
                     # Get live price for tickers
+                    #self.ticker_prices = [si.get_live_price(ticker) for ticker in self.tickerlist]
+                    
                     self.ticker_prices = []
-                    self.ticker_prices = [si.get_live_price(ticker) for ticker in self.tickerlist]
+                    for ticker in self.tickerlist:
+                        self.ticker_prices.append(ticker)
+                
                 except:
                     self.trigger = True                   
                     print('Error thrown in Thread {}'.format(self.taskno))

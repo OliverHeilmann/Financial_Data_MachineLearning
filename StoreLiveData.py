@@ -63,7 +63,7 @@ def check_tickers(tickers):
         except:
             print('\n\n{} has not been found\n\n'.format(ticker))
             tickers.remove(ticker)
-    print('{}/{} tickers have passed checks'.format(len(tickers),total_tickers))
+    print('########### {}/{} passed ###########'.format(len(tickers),total_tickers))
     return tickers
 
 

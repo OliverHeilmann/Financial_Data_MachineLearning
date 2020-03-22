@@ -150,20 +150,20 @@ if __name__ == '__main__':
     # Initiate and start Github thread (required for financial data collection 
     # during github upload)
     GH = GithubUpdate(filepath=filename);  GH.start()
-    GH.upload_github()  # ensure Github and script are up to date
+    #GH.upload_github()  # ensure Github and script are up to date
     time.sleep(5)
     
     #Main loop giving stock collection instructions
     try:
         while True:
-            if stockmarket_openhours(zone, m_open, m_close)==True:
+            if stockmarket_openhours(zone, m_open, m_close)==False:
                 # Make empty dataframe to append to
                 df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
                 
                 # Append price list to dataframe if markets are open
                 for i in range(0,rows):
                     # IF statement to check if markets are open
-                    if datetime.now(zone) <= m_close:
+                    if datetime.now(zone) >= m_close:
                         df = dataframe_prices(dataframe = df)
                         print('Collecting stock prices every {} seconds...'.format(pull_step))
                         time.sleep(pull_step)
@@ -172,13 +172,13 @@ if __name__ == '__main__':
                     df.to_csv(filename)
                     print(df)
                     print('\n\nCreated filepath...\n{} rows added\n\n'.format(len(df)-1))
-                    GH.upload_github() 
+                    #GH.upload_github() 
                 else:
                     # Append dataframe to csv file
                     df.to_csv(filename, mode='a', header=False)
                     print(df)
                     print('\nAppended {}...\n{} rows added\b'.format(filename, len(df)))
-                    GH.upload_github()
+                    #GH.upload_github()
             else:
                 print('Markets are closed...\n')
                 time.sleep(pull_step)

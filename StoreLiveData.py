@@ -51,6 +51,7 @@ from WebscrapeStockData_Threaded import AssignWorkers, GithubUpdate
 # Ensure ticker returns results
 def check_tickers(tickers):
     print('Checking Tickers')
+    total_tickers = len(tickers)
     for ticker in tickers:
         # Provide user with loading information of % completion
         print('----> {} %'.format(round((tickers.index(ticker)+1)*100/len(tickers),1)))
@@ -62,6 +63,7 @@ def check_tickers(tickers):
         except:
             print('\n\n{} has not been found\n\n'.format(ticker))
             tickers.remove(ticker)
+    print('{}/{} tickers have passed checks'.format(len(tickers),total_tickers))
     return tickers
 
 

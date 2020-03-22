@@ -8,13 +8,7 @@ scraped can also be selected. Main functions required are below:
     AW = AssignWorkers()
     AW.assignworkers(tickerlist=tickers, tickerNo = X, workerNo = Y)
     AW.pull_live_price()
-    AW.stop_all()   
-
-# BUG: self.ticker_prices() is called by pull_live_price() faster than the 
-        results can be populated- this throws an error in the script which can
-        be avoided by adding a "wait" mechanism in the code... Or better, can
-        append a list rather that rewrite it so that something may always be
-        passed.
+    AW.stop_all()
 """
 from threading import Thread
 import pickle, os, math

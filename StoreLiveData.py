@@ -151,7 +151,7 @@ if __name__ == '__main__':
     # Initiate and start Github thread (required for financial data collection 
     # during github upload)
     GH = GithubUpdate(filepath=filename);  GH.start()
-    #GH.upload_github()  # ensure Github and script are up to date
+    GH.upload_github()  # ensure Github and script are up to date
     time.sleep(5)
     
     #Main loop giving stock collection instructions

@@ -54,6 +54,7 @@ class LivePrice(Thread):
                     if self.trigger == True:
                         print('Thread {} continuing...'.format(self.taskno))
                         print(self.ticker_prices)
+                        print(self.tickerlist)
                         self.trigger = False
                     
                     # Get live price for tickers

@@ -49,9 +49,8 @@ class LivePrice(Thread):
                         self.trigger = False
                     
                     # Get live price for tickers
-                    print('Thread {} is happy'.format(self.taskno))
-                    time.sleep(3)
-                    #self.ticker_prices = [si.get_live_price(ticker) for ticker in self.tickerlist]
+                    self.ticker_prices = []
+                    self.ticker_prices = [si.get_live_price(ticker) for ticker in self.tickerlist]
                 except:
                     self.trigger = True                   
                     print('Error thrown in Thread {}'.format(self.taskno))

@@ -9,8 +9,15 @@ scraped can also be selected. Main functions required are below:
     AW.assignworkers(tickerlist=tickers, tickerNo = X, workerNo = Y)
     AW.pull_live_price()
     AW.stop_all()   
+
+# BUG: self.ticker_prices() is called by pull_live_price() faster than the 
+        results can be populated- this throws an error in the script which can
+        be avoided by adding a "wait" mechanism in the code... Or better, can
+        append a list rather that rewrite it so that something may always be
+        passed.
 """
 from threading import Thread
+import numpy as np
 import pickle, os, math
 from yahoo_fin import stock_info as si
 from datetime import datetime
@@ -21,7 +28,8 @@ class LivePrice(Thread):
     def __init__(self, tickerlist = None, taskno = None):
         self.tickerlist = tickerlist  # List of tickers
         self.taskno = str(taskno+1)   # String for printing in terminal
-        self.ticker_prices = []       # List of ticker prices
+        self.ticker_prices = np.zeros(len(tickerlist))   # List of ticker prices
+        #self.ticker_prices = []
         self.trigger = False          # Indicate to user thread still functional
         self.has_been_called=False
         self.terminationRequired = False
@@ -53,10 +61,9 @@ class LivePrice(Thread):
                     # Get live price for tickers
                     #self.ticker_prices = [si.get_live_price(ticker) for ticker in self.tickerlist]
                     
-                    self.ticker_prices = []
-                    for ticker in self.tickerlist:
-                        self.ticker_prices.append(ticker)
-                
+                    for i in range(0, len(self.tickerlist)):
+                        self.ticker_prices[i] = si.get_live_price(self.tickerlist[i])
+
                 except:
                     self.trigger = True                   
                     print('Error thrown in Thread {}'.format(self.taskno))

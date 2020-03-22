@@ -17,19 +17,18 @@ scraped can also be selected. Main functions required are below:
         passed.
 """
 from threading import Thread
-import numpy as np
 import pickle, os, math
 from yahoo_fin import stock_info as si
 from datetime import datetime
-import time, sys, pdb
+import time
 
 # Thread to collect live stock data
 class LivePrice(Thread):
     def __init__(self, tickerlist = None, taskno = None):
-        self.tickerlist = tickerlist  # List of tickers
-        self.taskno = str(taskno+1)   # String for printing in terminal
-        self.ticker_prices = np.zeros(len(tickerlist))   # List of ticker prices
-        self.trigger = False          # Indicate to user thread still functional
+        self.tickerlist = tickerlist    # List of tickers
+        self.taskno = str(taskno+1)     # String for printing in terminal
+        self.trigger = False            # Indicate to user thread still functional
+        self.ticker_prices = [None] * len(tickerlist)
         self.has_been_called=False
         self.terminationRequired = False
         Thread.__init__(self)
@@ -40,8 +39,6 @@ class LivePrice(Thread):
     
     # Pull ticker prices from thread
     def prices(self):
-        if len(self.ticker_prices) == 0:
-            return [None]
         return self.ticker_prices
     
     # Thread will continually collect workpack finanical data
@@ -53,9 +50,10 @@ class LivePrice(Thread):
                     try:
                         self.ticker_prices[i] = si.get_live_price(self.tickerlist[i])
                     except:
-                        print('----> {} failed...'.format(self.tickerlist[i]))
-                        #print("Unexpected error:", sys.exc_info()[0])
-                        #raise
+                        self.ticker_prices[i] = None
+#                        print('----> {} failed...'.format(self.tickerlist[i]))
+#                        print("Unexpected error:", sys.exc_info()[0])
+#                        raise
         else:
             print('No tickers passed...')
         print('Thread {} has stopped running'.format(self.taskno))
@@ -108,7 +106,7 @@ class AssignWorkers():
         # If any elements are None, return empty list to tell main script that
         # the threads are still collating ticker financial data.
         for i in pricelist:
-            if i == None or i == 0.:
+            if i is None:
                 pricelist = [None]
                 break
         return pricelist
@@ -150,6 +148,7 @@ if __name__ == '__main__':
     # Testing webscraping threads
     AW = AssignWorkers()
     AW.assignworkers(tickerlist=tickers, tickerNo = 100, workerNo = 5)
+    time.sleep(5)
     for i in range(0,100):
         print(len(AW.pull_live_price()))
         time.sleep(2)

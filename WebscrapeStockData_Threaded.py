@@ -39,7 +39,7 @@ class LivePrice(Thread):
     
     # Thread will continually collect workpack finanical data
     def run(self):
-        if not self.tickerlist == None:
+        if self.tickerlist != None and self.tickerlist != []:
             print('Thread {} has started running\n'.format(self.taskno))
             while not self.terminationRequired:
                 try:

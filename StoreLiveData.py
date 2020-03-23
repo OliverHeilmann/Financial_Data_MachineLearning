@@ -152,8 +152,6 @@ if __name__ == '__main__':
     try:
         while True:
             if stockmarket_openhours(zone, m_open, m_close)==True:
-                print('running')
-                '''
                 # Make empty dataframe to append to
                 df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
                 
@@ -176,7 +174,6 @@ if __name__ == '__main__':
                     print(df)
                     print('\nAppended {}...\n{} rows added\b'.format(filename, len(df)))
                     GH.upload_github()
-                '''
             else:
                 print('Markets are closed...\n')
                 time.sleep(pull_step)

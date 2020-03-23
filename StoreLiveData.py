@@ -178,8 +178,8 @@ if __name__ == '__main__':
             else:
                 print('Markets are closed...\n')
                 time.sleep(pull_step)
-    #except:
-    #    print('Exiting Main Loop...')
+    except:
+        print('Exiting Main Loop...')
     
     finally:
         # Stop threads when exiting while loop

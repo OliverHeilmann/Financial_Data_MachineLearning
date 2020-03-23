@@ -90,12 +90,21 @@ def dataframe_prices(dataframe):
 
 
 # Small function to send T/F logic for Exchange Trading Times
-def stockmarket_openhours(tmzone, m_open, m_close):
-    # Get day of week
-    weekday = datetime.now(tmzone).weekday()
-    if m_open <= datetime.now(tmzone) <= m_close and weekday <= 4:
-        return True
-    return False
+def stockmarket_openhours(tmzone, O, C):
+    if isinstance(O, list) and isinstance(C, list):
+        # Set Market Open/ Close times
+        now = datetime.now(zone)
+        m_open = now.replace(hour=O[0], minute=O[1], second=O[2], microsecond=O[3])
+        m_close = now.replace(hour=C[0], minute=C[1], second=C[2], microsecond=C[3])
+        
+        # Get day of week
+        weekday = datetime.now(tmzone).weekday()
+        if m_open <= datetime.now(tmzone) <= m_close and weekday <= 4:
+            return True
+        return False
+    else:
+        print('\nList not passed to stockmarket_openhours()\n')
+    
 
           
 # Main code with governing parameters
@@ -112,10 +121,9 @@ if __name__ == '__main__':
                         # name to be detected in Yahoo Finance
     
     # Set Market Open/ Close times (must add the times in)
-    now = datetime.now(zone)
-    m_open = now.replace(hour=8, minute=0, second=0, microsecond=0)
-    m_close = now.replace(hour=16, minute=30, second=0, microsecond=0)
-    
+    m_open = [8, 0, 0, 0]       # [hour, minute, second, microsecond]
+    m_close = [14, 30, 0, 0]    # [hour, minute, second, microsecond]   
+        
     # Minute by Minute filename
     filename = 'minute_by_minute.csv'
     

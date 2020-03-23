@@ -111,7 +111,7 @@ def stockmarket_openhours(tmzone, O, C):
 if __name__ == '__main__':
     ############## MANUAL PARAMETERS REQUIRED TO BE SET BELOW ################
     tickercolumn = 1    # which column are tickers in
-    ticker_size = 10   # number of tickers used from Wiki URL
+    ticker_size = 250   # number of tickers used from Wiki URL
     threads = 10        # number of threads pulling ticker data (1 per CPU core)
     pull_step = 60      # time (60 seconds) between price pull
     rows = 15           # number of rows before csv is pushed to Github (1 hour)

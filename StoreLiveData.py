@@ -103,8 +103,7 @@ def stockmarket_openhours(tmzone, O, C):
             return True
         return False
     else:
-        print('\nList not passed to stockmarket_openhours()\n')
-    
+        print('\nList not passed to stockmarket_openhours()\n')    
 
           
 # Main code with governing parameters

@@ -122,7 +122,7 @@ if __name__ == '__main__':
     
     # Set Market Open/ Close times (must add the times in)
     m_open = [8, 0, 0, 0]       # [hour, minute, second, microsecond]
-    m_close = [14, 30, 0, 0]    # [hour, minute, second, microsecond]   
+    m_close = [16, 30, 0, 0]    # [hour, minute, second, microsecond]   
         
     # Minute by Minute filename
     filename = 'minute_by_minute.csv'

@@ -111,7 +111,7 @@ def stockmarket_openhours(tmzone, O, C):
 if __name__ == '__main__':
     ############## MANUAL PARAMETERS REQUIRED TO BE SET BELOW ################
     tickercolumn = 1    # which column are tickers in
-    ticker_size = 250   # number of tickers used from Wiki URL
+    ticker_size = 10   # number of tickers used from Wiki URL
     threads = 10        # number of threads pulling ticker data (1 per CPU core)
     pull_step = 60      # time (60 seconds) between price pull
     rows = 15           # number of rows before csv is pushed to Github (1 hour)
@@ -152,6 +152,8 @@ if __name__ == '__main__':
     try:
         while True:
             if stockmarket_openhours(zone, m_open, m_close)==True:
+                print('running')
+                '''
                 # Make empty dataframe to append to
                 df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
                 
@@ -174,11 +176,12 @@ if __name__ == '__main__':
                     print(df)
                     print('\nAppended {}...\n{} rows added\b'.format(filename, len(df)))
                     GH.upload_github()
+                '''
             else:
                 print('Markets are closed...\n')
                 time.sleep(pull_step)
-    except:
-        print('Exiting Main Loop...')
+    #except:
+    #    print('Exiting Main Loop...')
     
     finally:
         # Stop threads when exiting while loop

@@ -91,10 +91,9 @@ def dataframe_prices(dataframe):
 
 # Small function to send T/F logic for Exchange Trading Times
 def stockmarket_openhours(tmzone, O, C):
-    print(O, C)
     if isinstance(O, list) and isinstance(C, list):
         # Set Market Open/ Close times
-        now = datetime.now(zone)
+        now = datetime.now(tmzone)
         m_open = now.replace(hour=O[0], minute=O[1], second=O[2], microsecond=O[3])
         m_close = now.replace(hour=C[0], minute=C[1], second=C[2], microsecond=C[3])
         

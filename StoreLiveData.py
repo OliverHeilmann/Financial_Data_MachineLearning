@@ -100,11 +100,11 @@ def stockmarket_openhours(tmzone, O, C):
         # Get day of week
         weekday = datetime.now(tmzone).weekday()
         if m_open <= datetime.now(tmzone) <= m_close and weekday <= 4:
-            return True
-        return False
+            return True, m_open, m_close
+        return False, m_open, m_close
     else:
         print('\nList not passed to stockmarket_openhours()\n')
-        return False
+        return False, m_open, m_close
 
           
 # Main code with governing parameters
@@ -151,14 +151,15 @@ if __name__ == '__main__':
     #Main loop giving stock collection instructions
     try:
         while True:
-            if stockmarket_openhours(zone, m_open, m_close)==True:
+            state, Open, Close = stockmarket_openhours(zone, m_open, m_close)
+            if state == True:
                 # Make empty dataframe to append to
                 df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
                 
                 # Append price list to dataframe if markets are open
                 for i in range(0,rows):
                     # IF statement to check if markets are open
-                    if datetime.now(zone) <= m_close:
+                    if datetime.now(zone) <= Close:
                         df = dataframe_prices(dataframe = df)
                         print('Collecting stock prices every {} seconds...'.format(pull_step))
                         time.sleep(pull_step)

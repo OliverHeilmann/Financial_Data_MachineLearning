@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Fri Mar 13 22:57:22 2020
 
@@ -8,186 +6,166 @@ Created on Fri Mar 13 22:57:22 2020
 My next task is to webscrape minute by minute data for FTSE 500 companies.
 7 days of data should be sufficient here as this is 604,800 total sample which
 is likely far more than is required.
-
-Notes:
-    - Ok, webscrape FTSE 250 and use top 150. If they fall below the 150 mark 
-    stil track them. If they fall outside 250 then whoops!The correlation 
-    between these companies may drop so this should be considered later on. We
-    will tackle this later on.
-    - stockmarket_openhours: should add public holidays and webscrape the 
-    trading times rather than require a manual input.
-
-Other:
-    -web traffic bot
-
 """
-
-import bs4 as bs
-import pickle
-import requests
-import pdb, time, os
-import string
+import time
+import pdb, os
 import pandas as pd
 from datetime import datetime
 from pytz import timezone 
-from yahoo_fin import stock_info as si  
-from WebscrapeStockData_Threaded import AssignWorkers, GithubUpdate 
+from FetchPrice_GithubUpload import AssignWorkers, GithubUpdate
+from FetchTickers import Market_Index_TickerList
+
+############# MANUAL PARAMETERS REQUIRED TO BE SET BELOW ################
+ticker_no = 20    # define number of tickers being collected -->tickers[0:n]
+threads = 10        # number of threads pulling ticker data (1 per CPU core)
+pull_step = 60      # time (60 seconds) between price pull
+rows = 15           # number of rows before csv is pushed to Github (1 hour)
+
+# Set Market Open/ Close times (must add the times in)
+zone = timezone('Europe/London')    # set the timezone of stock market 
+m_open = [8, 0, 0, 0]               # [hour, minute, second, microsecond]
+m_close = [16, 30, 0, 0]            # [hour, minute, second, microsecond]
+    
+# Minute by Minute data collection filename
+filename = 'minute_by_minute.csv'
+
+# Get tickers from Wiki URL
+t_filename = 'FTSE250.pickle'
+tickerURL = 'https://en.wikipedia.org/wiki/FTSE_250_Index'
+
+# Get ticker suffixes from Yahoo
+s_filename = 'TickerSuffix.pickle'
+yahooURL = 'https://help.yahoo.com/kb/exchanges-data-providers-yahoo-finance-sln2310.html'
+
+save = True
+####################### END OF MANUAL PARAMETERS #########################
 
 
-# Ensure ticker returns results
-def check_tickers(tickers):
-    print('Checking Tickers')
-    total_tickers = len(tickers)
-    for ticker in tickers:
-        # Provide user with loading information of % completion
-        print('----> {} %'.format(round((tickers.index(ticker)+1)*100/len(tickers),1)))
-        try:
-            val = si.get_live_price(ticker)
-            if val != float(val):
-                print('\n\n{} has not been found\n\n'.format(ticker))
-                tickers.remove(ticker)    
-        except:
-            print('\n\n{} has not been found\n\n'.format(ticker))
-            tickers.remove(ticker)
-    print('########### {}/{} passed ###########'.format(len(tickers),total_tickers))
-    return tickers
-
-
-# Webscrape from Wikipedia URLs (consider non real time)
-def save_tickers(tickercolumn=0, website=None, filename=None, LSE=False):
-    try:
-        if website != None:
-            resp = requests.get(website)
-            soup = bs.BeautifulSoup(resp.text, 'lxml')
-            table = soup.find('table', {'class': 'wikitable sortable'})
-            tickers = []
-            for row in table.findAll('tr')[1:]:
-                ticker = row.findAll('td')[tickercolumn].text.replace('\n', '').upper()
-                ticker = ticker.translate(str.maketrans('', '', string.punctuation))
-                if LSE == True:
-                    ticker = ticker + '.L'
-                tickers.append(ticker)
-            tickers = check_tickers(tickers[:ticker_size])  # check tickers
-            # Save tickers to a pickle file
-            with open(filename, "wb") as f:
-                pickle.dump(tickers, f)
-            return tickers
-        return None
-    except:
-        print('Likely not a Wikipedia URL...')
-
-
-# Pull live stock prices and append to dataframe
-def dataframe_prices(dataframe):
-    if dataframe.size >= 0:
-        liveprice = AW.pull_live_price()
-        # Append dataframe with new data
-        if liveprice != [None]:
-            df.loc[len(df)] = liveprice
-        return df
-    else:
-        print('No dataframe passed to dataframe_prices')
-
-
-# Small function to send T/F logic for Exchange Trading Times
-def stockmarket_openhours(tmzone, O, C):
-    if isinstance(O, list) and isinstance(C, list):
-        # Set Market Open/ Close times
-        now = datetime.now(tmzone)
-        m_open = now.replace(hour=O[0], minute=O[1], second=O[2], microsecond=O[3])
-        m_close = now.replace(hour=C[0], minute=C[1], second=C[2], microsecond=C[3])
+# Top level functions to store live data
+class StoreLiveData:
+    def __init__(self, save=True, ticker_no=10, threads=4, pull_step=60,
+                     rows=15, zone=timezone('Europe/London'), m_open=[0,0,0,0],
+                     m_close=[0,0,0,0], filename=None, t_filename=None, 
+                     tickerURL=None, s_filename=None, yahooURL=None):
         
-        # Get day of week
-        weekday = datetime.now(tmzone).weekday()
-        if m_open <= datetime.now(tmzone) <= m_close and weekday <= 4:
-            return True, m_open, m_close
-        return False, m_open, m_close
-    else:
-        print('\nList not passed to stockmarket_openhours()\n')
-        return False, m_open, m_close
+        # Passed parameters in Class
+        self.save = save
+        self.ticker_no = ticker_no
+        self.threads = threads
+        self.pull_step = pull_step
+        self.rows = rows
+        self.zone = zone
+        self.m_open = m_open
+        self.m_close = m_close
+        self.filename = filename
+        self.t_filename = t_filename
+        self.tickerURL = tickerURL
+        self.s_filename = s_filename
+        self.yahooURL = yahooURL
+        self.ticker_no = ticker_no
+        self.save = save
+        
+        # Setup of dataframe and threads
+        self.df = []
+        self.AW = AssignWorkers()
+        self.GH = GithubUpdate(filepath=self.filename);  
+    
+    
+    # Pull live stock prices and append to dataframe
+    def dataframe_prices(self, dataframe):
+        if dataframe.size >= 0:
+            liveprice = self.AW.pull_live_price()
+            # Append dataframe with new data
+            if liveprice != [None]:
+                self.df.loc[len(self.df)] = liveprice
+            return self.df
+        else:
+            print('No dataframe passed to dataframe_prices')
+    
+    
+    # Small function to send T/F logic for Exchange Trading Times
+    def stockmarket_openhours(self, tmzone, O, C):
+        if isinstance(O, list) and isinstance(C, list):
+            # Set Market Open/ Close times
+            now = datetime.now(tmzone)
+            m_open = now.replace(hour=O[0], minute=O[1], second=O[2], microsecond=O[3])
+            m_close = now.replace(hour=C[0], minute=C[1], second=C[2], microsecond=C[3])
+            
+            # Get day of week
+            weekday = datetime.now(tmzone).weekday()
+            if m_open <= datetime.now(tmzone) <= m_close and weekday <= 4:
+                return True, m_open, m_close
+            return False, m_open, m_close
+        else:
+            print('\nList not passed to stockmarket_openhours()\n')
+            return False, m_open, m_close
 
-          
+
+    # Main script 
+    def main(self):
+        # Collect list of tickers
+        YS = Market_Index_TickerList(self.s_filename, self.t_filename, self.yahooURL, 
+                                     self.tickerURL, self.ticker_no, self.save)
+        tickers = YS.choose_market()
+        
+        # Start webscraping threads
+        self.AW.assignworkers(tickerlist=tickers[:self.ticker_no],
+                         tickerNo=self.ticker_no, workerNo=self.threads)
+        
+        # Initiate and start Github thread (required for financial data collection 
+        # during github upload)
+        self.GH.start()
+        self.GH.upload_github()  # ensure Github and script are up to date
+        time.sleep(5)
+        
+        #Main loop giving stock collection instructions
+        try:
+            while True:
+                state, Open, Close = self.stockmarket_openhours(self.zone, self.m_open, self.m_close)
+                if state == True:
+                    # Make empty dataframe to append to
+                    self.df = pd.DataFrame(columns = ['Date Time'] + tickers[:self.ticker_no])
+                    
+                    # Append price list to dataframe if markets are open
+                    for i in range(0,self.rows):
+                        # IF statement to check if markets are open
+                        if datetime.now(self.zone) <= Close:
+                            self.df = self.dataframe_prices(dataframe = self.df)
+                            print('Collecting stock prices every {} seconds...'.format(self.pull_step))
+                            time.sleep(self.pull_step)
+            
+                    if not os.path.exists(self.filename):
+                        self.df.to_csv(self.filename)
+                        print(self.df)
+                        print('\n\nCreated filepath...\n{} rows added\n\n'.format(len(self.df)-1))
+                        self.GH.upload_github() 
+                    else:
+                        # Append dataframe to csv file
+                        self.df.to_csv(self.filename, mode='a', header=False)
+                        print(self.df)
+                        print('\nAppended {}...\n{} rows added\b'.format(self.filename, len(self.df)))
+                        self.GH.upload_github()
+                else:
+                    print('Markets are closed...\n')
+                    time.sleep(self.pull_step)
+        except:
+            print('Exiting Main Loop...')
+        
+        finally:
+            # Stop threads when exiting while loop
+            self.AW.stop_all()   # stop workers
+            self.GH.stop()       # stop Github
+            
+            # Alert user that collecting has finished
+            print('''
+                    ###############################\n
+                    No more data will be collected.\n
+                    ###############################''')
+
+
 # Main code with governing parameters
 if __name__ == '__main__':
-    ############## MANUAL PARAMETERS REQUIRED TO BE SET BELOW ################
-    tickercolumn = 1    # which column are tickers in
-    ticker_size = 250   # number of tickers used from Wiki URL
-    threads = 10        # number of threads pulling ticker data (1 per CPU core)
-    pull_step = 60      # time (60 seconds) between price pull
-    rows = 15           # number of rows before csv is pushed to Github (1 hour)
-    zone = timezone('Europe/London')    # set the timezone of stock market
-    LSE = True          # London Stock Exchange? If it is assign as 'True'. The
-                        # reason for this is the tickers require '.L' at end of
-                        # name to be detected in Yahoo Finance
-    
-    # Set Market Open/ Close times (must add the times in)
-    m_open = [8, 0, 0, 0]       # [hour, minute, second, microsecond]
-    m_close = [16, 30, 0, 0]    # [hour, minute, second, microsecond]   
-        
-    # Minute by Minute filename
-    filename = 'minute_by_minute.csv'
-    
-    # Get tickers from Wiki URL
-    #webURL = 'http://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
-    #filename = 'sp500tickers.pickle'
-    webURL = 'https://en.wikipedia.org/wiki/FTSE_250_Index'
-    picklename = 'FTSE250.pickle'
-    
-    ####################### END OF MANUAL PARAMETERS #########################
-    
-    # Collect list of tickers
-    tickers = save_tickers(tickercolumn, webURL, picklename, LSE)     
-    
-    # Start webscraping threads
-    AW = AssignWorkers()
-    AW.assignworkers(tickerlist=tickers, tickerNo=ticker_size, workerNo=threads)
-    
-    # Initiate and start Github thread (required for financial data collection 
-    # during github upload)
-    GH = GithubUpdate(filepath=filename);  GH.start()
-    GH.upload_github()  # ensure Github and script are up to date
-    time.sleep(5)
-    
-    #Main loop giving stock collection instructions
-    try:
-        while True:
-            state, Open, Close = stockmarket_openhours(zone, m_open, m_close)
-            if state == True:
-                # Make empty dataframe to append to
-                df = pd.DataFrame(columns = ['Date Time'] + tickers[:ticker_size])
-                
-                # Append price list to dataframe if markets are open
-                for i in range(0,rows):
-                    # IF statement to check if markets are open
-                    if datetime.now(zone) <= Close:
-                        df = dataframe_prices(dataframe = df)
-                        print('Collecting stock prices every {} seconds...'.format(pull_step))
-                        time.sleep(pull_step)
-        
-                if not os.path.exists(filename):
-                    df.to_csv(filename)
-                    print(df)
-                    print('\n\nCreated filepath...\n{} rows added\n\n'.format(len(df)-1))
-                    GH.upload_github() 
-                else:
-                    # Append dataframe to csv file
-                    df.to_csv(filename, mode='a', header=False)
-                    print(df)
-                    print('\nAppended {}...\n{} rows added\b'.format(filename, len(df)))
-                    GH.upload_github()
-            else:
-                print('Markets are closed...\n')
-                time.sleep(pull_step)
-    except:
-        print('Exiting Main Loop...')
-    
-    finally:
-        # Stop threads when exiting while loop
-        AW.stop_all()   # stop workers
-        GH.stop()       # stop Github
-        
-        # Alert user that collecting has finished
-        print('''
-                ###############################\n
-                No more data will be collected.\n
-                ###############################''')
+    begin = StoreLiveData(save, ticker_no, threads, pull_step, rows, zone,
+                          m_open, m_close, filename, t_filename, tickerURL,
+                          s_filename, yahooURL)
+    begin.main()

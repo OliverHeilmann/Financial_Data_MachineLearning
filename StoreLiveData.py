@@ -16,7 +16,7 @@ from FetchPrice_GithubUpload import AssignWorkers, GithubUpdate
 from FetchTickers import Market_Index_TickerList
 
 ############# MANUAL PARAMETERS REQUIRED TO BE SET BELOW ################
-ticker_no = 20    # define number of tickers being collected -->tickers[0:n]
+ticker_no = 250     # define number of tickers being collected -->tickers[0:n]
 threads = 10        # number of threads pulling ticker data (1 per CPU core)
 pull_step = 60      # time (60 seconds) between price pull
 rows = 15           # number of rows before csv is pushed to Github (1 hour)

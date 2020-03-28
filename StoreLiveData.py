@@ -27,7 +27,7 @@ m_open = [8, 0, 0, 0]               # [hour, minute, second, microsecond]
 m_close = [16, 30, 0, 0]            # [hour, minute, second, microsecond]
     
 # Minute by Minute data collection filename
-filename = 'minute_by_minute.csv'
+filename = 'minute_by_minute_weekends.csv'
 
 # Get tickers from Wiki URL
 t_filename = 'FTSE250.pickle'

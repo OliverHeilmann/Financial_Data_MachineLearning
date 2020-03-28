@@ -85,6 +85,9 @@ class StoreLiveData:
     
     # Small function to send T/F logic for Exchange Trading Times
     def stockmarket_openhours(self, tmzone, O, C):
+        ### NOTE: 'state = True': keep updating stock price over weekend  ####
+        ### NOTE: 'state = False': stop updating stock price over weekend ####
+        state = True
         if isinstance(O, list) and isinstance(C, list):
             # Set Market Open/ Close times
             now = datetime.now(tmzone)
@@ -94,11 +97,10 @@ class StoreLiveData:
             # Get day of week
             weekday = datetime.now(tmzone).weekday()
             if m_open <= datetime.now(tmzone) <= m_close and weekday <= 4:
-                return True, m_open, m_close
-            return False, m_open, m_close
+                state = True
         else:
             print('\nList not passed to stockmarket_openhours()\n')
-            return False, m_open, m_close
+        return state, m_open, m_close
 
 
     # Main script 

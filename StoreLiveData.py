@@ -87,7 +87,7 @@ class StoreLiveData:
     def stockmarket_openhours(self, tmzone, O, C):
         ### NOTE: 'state = True': keep updating stock price over weekend  ####
         ### NOTE: 'state = False': stop updating stock price over weekend ####
-        state = True
+        store_weekend = True
         if isinstance(O, list) and isinstance(C, list):
             # Set Market Open/ Close times
             now = datetime.now(tmzone)
@@ -97,10 +97,10 @@ class StoreLiveData:
             # Get day of week
             weekday = datetime.now(tmzone).weekday()
             if m_open <= datetime.now(tmzone) <= m_close and weekday <= 4:
-                state = True
+                store_weekend = True
         else:
             print('\nList not passed to stockmarket_openhours()\n')
-        return state, m_open, m_close
+        return store_weekend
 
 
     # Main script 
@@ -123,7 +123,7 @@ class StoreLiveData:
         #Main loop giving stock collection instructions
         try:
             while True:
-                state, Open, Close = self.stockmarket_openhours(self.zone, self.m_open, self.m_close)
+                state = self.stockmarket_openhours(self.zone, self.m_open, self.m_close)
                 if state == True:
                     # Make empty dataframe to append to
                     self.df = pd.DataFrame(columns = ['Date Time'] + tickers[:self.ticker_no])
@@ -131,7 +131,8 @@ class StoreLiveData:
                     # Append price list to dataframe if markets are open
                     for i in range(0,self.rows):
                         # IF statement to check if markets are open
-                        if datetime.now(self.zone) <= Close:
+                        state  = self.stockmarket_openhours(self.zone, self.m_open, self.m_close)
+                        if state == True:
                             self.df = self.dataframe_prices(dataframe = self.df)
                             print('Collecting stock prices every {} seconds...'.format(self.pull_step))
                             time.sleep(self.pull_step)

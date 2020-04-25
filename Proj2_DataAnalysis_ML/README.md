@@ -126,9 +126,8 @@ As with all of the plots presented here, the user is able to navigate around the
 ### Price, Standardise, Percent Change: visualize_corr_data()
 
 <p float="left">
-  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/StockPrices.png" height=230 />
- <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/stndard.png" height=230 />
-  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/TickerPricePctChange.png" height=230 />
+  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/StockPrices.png" height=300 />
+ <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/stndard.png" height=300 />
 </p>
 
 

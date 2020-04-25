@@ -111,13 +111,14 @@ if collect_tickers_and_compile:
 This script outputs a Correlation Table as well as a series of figures presenting Trade Volume and/or Stock Price data (either as a Percentage Change/ Day, Standardised, or Stock Price) for all the tickers you have selected and compiled.
 
 ### Correlation Table: visualize_corr_data()
-
+If you would like to produce a correlation table from the ticker list you have defined, simply leave this line of code uncommented.
 ```Python
 # Create a CORRELATION TABLE
 visualize_corr_data(csv_name=compilename, companies=view_comps, clean=True)
 ```
+**What does a correlation table actually represent?** Simply put, it shows the similarity of company data with one another. If two companies stock data rise and fall together, they are considered to be similar and would have a score closer to 1.0 (green). The opposite is true for disimilar companies (red).
 <p float="left">
   <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/CorrPlot.png" height=300 />
   <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/CorrPlot2.png" height=300 />
 </p>
-
+As with all of the plots presented here, the user is able to navigate around the tables/ graphs freely and zoom in on the companies they are interested in. This output alone people actually pay money for online so having this functionality for free is quite useful here. 

@@ -73,7 +73,7 @@ Although I have given you the option to rename your csv and pickle filenames (se
 
 With regards to the weblinks, I do not suggest changing the **yahooURL** link as this directs the program to the official yahoo-finance ticker suffix page. If you prefer to use another index (not FTSE 250 like I have for example), then go ahead and change the weblink for **tickerURL**; just make sure that you select the corresponding stock exchange when prompted in the terminal. 
 
-So just a quick example, I am webscraping the FTSE 250 list- this will be traded on the London Stock Exchange, therefore I have selected *77* to add the suffix *{ticker}.L* to all my webscraped tickers (which will be used to collect financial data from Yahoo-Finance). 
+So just a quick example, I am webscraping the FTSE 250 list- this will be traded on the London Stock Exchange, therefore I have selected *77* to add the suffix *'{ticker}.L'* to all my webscraped tickers (which will be used to collect financial data from Yahoo-Finance). 
 
 <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj1_Webscrape_Min_by_Min/Pictures/request.png" height=500>
 
@@ -86,8 +86,8 @@ collect_tickers_and_compile, COMP = True, True                   #<---- USER INP
 ```
 If you ever want to update your dataset/ keep your ticker prices up to date, just recompile the data again- the new information will be appended to the files you already have. Something like the image below will be displayed in your terminal. These files will be saved under the **stocks_dfs** directory.
 
-*If there is no ticker file: *'Created file for {ticker} data'*
-*If the ticker file already exists: *'Adding new data for {ticker}'*
-*If you already have ticker: *'Already have {ticker}'*
+- If there is no ticker file: *'Created file for {ticker} data'*
+- If the ticker file already exists: *'Adding new data for {ticker}'*
+- If you already have ticker: *'Already have {ticker}'*
 
 <img src=https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/createfile.png height=500>

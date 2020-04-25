@@ -153,7 +153,7 @@ tradevol_adjclose(TVAJfile=f1, Pfile= f2, showday=100, days=2, TpBt=3)
 ```
 
 ### CandleStick Graph: candlestickplot()
-
+This function will plot a candlestick chart for whichever ticker you input (must be from the original list you compiled however). Additionally, a 100 day and 20 day moving average will be displayed for your data in yellow and blue respectively. Furthermore, a subplot with the trade volume is displayed. As the user zooms in on sections, the trade volume automatically moves as well.
 <p float="left">
   <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/GFS_Candlestick.png" height=300 />
  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/GFS_Candlestick2.png" height=300 />
@@ -161,13 +161,21 @@ tradevol_adjclose(TVAJfile=f1, Pfile= f2, showday=100, days=2, TpBt=3)
 
 
 ### [Trade Volume/ Adjusted Close]% Change/Day: tradevol_adjclose()
+This function centres around the [Trade Volume/ Adjusted Close]% Change/Day information which I have found to be a better metric than simply analysing stock price data. As trade volume goes up, we can assume that interest in the company also increases. If the Adjusted Close price has gone down in value in the same day, then the fraction *Trade Volume/ Adjusted Close* increases. We monitor the percentage change per day to see when the optimal time to buy the stock is (when trading volume is higher than normal and adjusted close is lower than normal).
+
+The information presented in the table below shows the TOP X and BOTTOM X performing companies averaged over the PAST Y DAYS. If the [TV/AC]% value is high, then it is likely a good time to buy shares in that ticker, the opposite is true for a low [TV/AC]%. Trade volumes are quite volotile (as are stock prices, especially during the COVID-19 pandemic) so I suggest using an average of around 3 days maximum if you plan on buying/ selling shares in short time periods.
+
+Another interesting thing to note is that the [TV/AC]% peaks often align with one another- I suspect this is an indication into where the *market interest* lies on a given time period. My intention is to use this data format to feed into a machine learning model.
 
 <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/TopBot_CompaniesChart.png" height=700>
 
-
-
 ## VolPrice_ML.py
-
+```Python
+# Train Machine Learning Model (change ticker name after looking at above plots)
+tic = 'GFS.L'                                                                        #<---- USER INPUT HERE
+model = tickerML(ticker=tic, requirement=0.02, hm_days=10, comp=COMP)
+model.run_model()
+```
 <p float="left">
   <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/BA_ML_Predictions.png" height=300 />
  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/BA_ML_Predictions2.png" height=300 />

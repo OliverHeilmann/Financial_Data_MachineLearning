@@ -193,6 +193,21 @@ def buy_sell_hold(self, *args):
     # If not buy or sell then hold
     return 0
 ```
+For the classification model I use an ensemble voting classifier with KNN and Random Forest Classifiers as these seemed to give the best results; SVM for example actually reduced the overall accuracy of the model for example (however this is perhaps because it was producing a more accurate fit to the data perhaps). 
+
+```Python
+# Keep dataset for final validation after ML
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+...
+
+# Ensemble Voting Classifier
+clf = VotingClassifier([('knn', neighbors.KNeighborsClassifier(n_neighbors=5, n_jobs=-1)),
+                        ('rfor', RandomForestClassifier(min_samples_leaf=150))])    
+
+# Fit Data (i.e. do the machine learning)
+clf.fit(X_train, y_train)
+```
 
 <p float="left">
   <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/BA_ML_Predictions.png" height=300 />

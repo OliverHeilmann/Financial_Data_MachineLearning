@@ -116,9 +116,24 @@ If you would like to produce a correlation table from the ticker list you have d
 # Create a CORRELATION TABLE
 visualize_corr_data(csv_name=compilename, companies=view_comps, clean=True)
 ```
-**What does a correlation table actually represent?** Simply put, it shows the similarity of company data with one another. If two companies stock data rise and fall together, they are considered to be similar and would have a score closer to 1.0 (green). The opposite is true for disimilar companies (red).
+**What does a correlation table actually represent?** Simply put, it shows the similarity of company data with one another. If two companies stock prices rise and fall together frequently, they are considered to be similar and would have a score closer to 1.0 (green). The opposite is true for disimilar companies (red).
 <p float="left">
   <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/CorrPlot.png" height=300 />
   <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/CorrPlot2.png" height=300 />
 </p>
 As with all of the plots presented here, the user is able to navigate around the tables/ graphs freely and zoom in on the companies they are interested in. This output alone people actually pay money for online so having this functionality for free is quite useful here. 
+
+### Price, Standardise, Percent Change: visualize_corr_data()
+
+<p float="left">
+  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/StockPrices.png
+" height=200 />
+ <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/stndard.png
+" height=200 />
+  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/TickerPricePctChange.png
+" height=200 />
+</p>
+
+
+
+

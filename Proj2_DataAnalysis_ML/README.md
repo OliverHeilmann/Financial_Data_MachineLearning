@@ -116,9 +116,104 @@ If you would like to produce a correlation table from the ticker list you have d
 # Create a CORRELATION TABLE
 visualize_corr_data(csv_name=compilename, companies=view_comps, clean=True)
 ```
-**What does a correlation table actually represent?** Simply put, it shows the similarity of company data with one another. If two companies stock data rise and fall together, they are considered to be similar and would have a score closer to 1.0 (green). The opposite is true for disimilar companies (red).
+**What does a correlation table actually represent?** Simply put, it shows the similarity of company data with one another. If two companies stock prices rise and fall together frequently, they are considered to be similar and would have a score closer to 1.0 (green). The opposite is true for disimilar companies (red).
 <p float="left">
   <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/CorrPlot.png" height=300 />
   <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/CorrPlot2.png" height=300 />
 </p>
 As with all of the plots presented here, the user is able to navigate around the tables/ graphs freely and zoom in on the companies they are interested in. This output alone people actually pay money for online so having this functionality for free is quite useful here. 
+
+### Price, Standardise, Percent Change: time_series_plot()
+This function outputs x3 graphs using the ticker data compiled into csv format. Notice that the fuction is repeated twice- the first is for the stock prices, and the second is for the trade volumes. The *for loop* is used to generate a total of 6 graphs. A'Percentage Change', 'Standardised' and 'Price' for both the stock prices and trade volumes.
+```Python
+# Plot company data/ use interactive plotter
+for i in ['Percentage Change', 'Standardised', 'Price']:
+    time_series_plot(csv_name=compilename, Type=i, companies=view_comps,clean=True, avg=False)
+    time_series_plot(csv_name=compilename_vol, Type=i, companies=view_comps,clean=True, avg=False)
+```
+Below is an illustration of the kind of output seen. An additional note is that the user can identify which line relates to which company by simply moving the mouse over the line in question. A pop-up box will appear with the ticker name (see below). On top of this, **avg=True** will plot an average line on the graph as well; this can be seen below as the thick red line.
+<p float="left">
+  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/StockPrices.png" height=300 />
+ <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/stndard.png" height=300 />
+</p>
+
+## MovingAverage.py
+This script contains two functions which can plot two separate outputs. See the code below for the function names.
+```Python
+tic = 'GFS.L'                                                                        #<---- USER INPUT HERE
+
+...
+
+# Create a candlestick plot for a specific ticker
+candlestickplot(tic)
+
+# Use below function to look at top/ bottom performing companies
+f1 = 'TV_AC_Dataframe.csv'; f2 = 'PricesDF.csv'
+tradevol_adjclose(TVAJfile=f1, Pfile= f2, showday=100, days=2, TpBt=3)
+```
+
+### CandleStick Graph: candlestickplot()
+This function will plot a candlestick chart for whichever ticker you input (must be from the original list you compiled however). Additionally, a 100 day and 20 day moving average will be displayed for your data in yellow and blue respectively. Furthermore, a subplot with the trade volume is displayed. As the user zooms in on sections, the trade volume automatically moves as well.
+<p float="left">
+  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/GFS_Candlestick.png" height=300 />
+ <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/GFS_Candlestick2.png" height=300 />
+</p>
+
+
+### [Trade Volume/ Adjusted Close]% Change/Day: tradevol_adjclose()
+This function centres around the [Trade Volume/ Adjusted Close]% Change/Day information which I have found to be a better metric than simply analysing stock price data. As trade volume goes up, we can assume that interest in the company also increases. If the Adjusted Close price has gone down in value in the same day, then the fraction *Trade Volume/ Adjusted Close* increases. We monitor the percentage change per day to see when the optimal time to buy the stock is (when trading volume is higher than normal and adjusted close is lower than normal).
+
+The information presented in the table below shows the TOP X and BOTTOM X performing companies averaged over the PAST Y DAYS. If the [TV/AC]% value is high, then it is likely a good time to buy shares in that ticker, the opposite is true for a low [TV/AC]%. Trade volumes are quite volotile (as are stock prices, especially during the COVID-19 pandemic) so I suggest using an average of around 3 days maximum if you plan on buying/ selling shares in short time periods.
+
+Another interesting thing to note is that the [TV/AC]% peaks often align with one another- I suspect this is an indication into where the *market interest* lies on a given time period. My intention is to use this data format to feed into a machine learning model.
+
+<img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/TopBot_CompaniesChart.png" height=700>
+
+## VolPrice_ML.py
+This script is the machine learning aspect of this project. Here, I have used a *Supervised Classification* method of training rather than a *Regression* (though I will be experimenting with this later). The code below calls the ML training function for which ever ticker is input by the user. If you do not wish to train a model, simply comment out the **model.run_model()** line.
+```Python
+# Train Machine Learning Model (change ticker name after looking at above plots)
+tic = 'GFS.L'                                                                        #<---- USER INPUT HERE
+model = tickerML(ticker=tic, requirement=0.02, hm_days=10, comp=COMP)
+model.run_model()
+```
+The way this function works is by setting a threshold %change in Adjusted Close price (**requirement=0.02** here). If the stock price increases by more than **2%** in **10** days (see **hm_days=10**) then this is a *BUY*. If it goes down by **2%** or more then it is a *SELL*; otherwise it is a *HOLD*. I use this decision to add an additional column to a *Pandas Dataframe* with BUY=1, SELL=-1, HOLD=0 on each row. See the code below.
+```Python
+# Turning this into a classification problem (not regression)
+def buy_sell_hold(self, *args):
+    # Each time this function is called, 'x' next days of values are
+    # passed through this for loop. As soon as the requirement is met,
+    # a value will be returned.
+    cols = [c for c in args]
+    for col in cols:
+        if col > self.requirement:
+            return 1
+        if col < -self.requirement:
+            return -1
+    # If not buy or sell then hold
+    return 0
+```
+For the classification model I use an ensemble voting classifier with KNN and Random Forest Classifiers as these seemed to give the best results; SVM for example actually reduced the overall accuracy of the model for example (however this is perhaps because it was producing a more accurate fit to the data perhaps). 
+
+```Python
+# Keep dataset for final validation after ML
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+...
+
+# Ensemble Voting Classifier
+clf = VotingClassifier([('knn', neighbors.KNeighborsClassifier(n_neighbors=5, n_jobs=-1)),
+                        ('rfor', RandomForestClassifier(min_samples_leaf=150))])    
+
+# Fit Data (i.e. do the machine learning)
+clf.fit(X_train, y_train)
+```
+
+<p float="left">
+  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/BA_ML_Predictions.png" height=300 />
+ <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/BA_ML_Predictions2.png" height=300 />
+</p>
+
+
+
+

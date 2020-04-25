@@ -118,6 +118,10 @@ if __name__ == '__main__':
     # however the data will not update until recompiled.
     collect_tickers_and_compile, COMP = True, True
     
+    # Define CSV Filenames
+    compilename = 'FTSE250_Compiled.csv'
+    compilename_vol = 'FTSE250_TradeVol.csv'          
+    
     if collect_tickers_and_compile:
         # Adding additional tickers to tickerlist. Notice that there are
         # repeats. The program will not duplicate these.
@@ -142,11 +146,9 @@ if __name__ == '__main__':
         get_data_from_yahoo(reload=True, ticker_funct=YS, picklepath=t_filename, startdate=[2005,1,1])
         
         # compile this information into x1 .csv file for later use and/or reference
-        compilename = 'FTSE250_Compiled.csv'
         compile_data(picklepath=t_filename , name=compilename)
         
         # compile trade volumes of all the companies into one csv
-        compilename_vol = 'FTSE250_TradeVol.csv'
         compile_data(picklepath=t_filename , name=compilename_vol, col_replace='Volume')
    
     ##################################################################   
@@ -159,7 +161,7 @@ if __name__ == '__main__':
     visualize_corr_data(csv_name=compilename, companies=view_comps, clean=True)
     
     # Plot company data/ use interactive plotter
-    for i in ['Percentage Change']:#, 'Standardised', 'Price']:
+    for i in ['Percentage Change', 'Standardised', 'Price']:
         time_series_plot(csv_name=compilename, Type=i, companies=view_comps,clean=True, avg=False)
         time_series_plot(csv_name=compilename_vol, Type=i, companies=view_comps,clean=True, avg=False)
      

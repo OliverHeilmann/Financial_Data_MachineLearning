@@ -117,7 +117,7 @@ This script outputs a Correlation Table as well as a series of figures presentin
 visualize_corr_data(csv_name=compilename, companies=view_comps, clean=True)
 ```
 <p float="left">
-  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/CorrPlot.png" height=350 />
-  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/CorrPlot2.png" height=350 />
+  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/CorrPlot.png" height=300 />
+  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/CorrPlot2.png" height=300 />
 </p>
 

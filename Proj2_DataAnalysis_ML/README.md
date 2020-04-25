@@ -154,16 +154,14 @@ tradevol_adjclose(TVAJfile=f1, Pfile= f2, showday=100, days=2, TpBt=3)
 
 ### CandleStick Graph: candlestickplot()
 
-<img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj1_Webscrape_Min_by_Min/Pictures/request.png" height=500>
+<img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/GFS_Candlestick.png" height=500>
 
-<img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj1_Webscrape_Min_by_Min/Pictures/GFS_Candlestick.png" height=500>
-
-<img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj1_Webscrape_Min_by_Min/Pictures/GFS_Candlestick2.png" height=500>
+<img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/GFS_Candlestick.png" height=500>
 
 
 ### [Trade Volume/ Adjusted Close]% Change/Day: tradevol_adjclose()
 
-<img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj1_Webscrape_Min_by_Min/Pictures/TopBot_CompaniesChart.png" height=500>
+<img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/TopBot_CompaniesChart.png" height=500>
 
 
 

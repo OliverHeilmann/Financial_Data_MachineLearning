@@ -154,18 +154,24 @@ tradevol_adjclose(TVAJfile=f1, Pfile= f2, showday=100, days=2, TpBt=3)
 
 ### CandleStick Graph: candlestickplot()
 
-<img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/GFS_Candlestick.png" height=500>
-
-<img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/GFS_Candlestick.png" height=500>
+<p float="left">
+  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/GFS_Candlestick.png" height=300 />
+ <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/GFS_Candlestick2.png" height=300 />
+</p>
 
 
 ### [Trade Volume/ Adjusted Close]% Change/Day: tradevol_adjclose()
 
-<img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/TopBot_CompaniesChart.png" height=500>
+<img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/TopBot_CompaniesChart.png" height=700>
 
 
 
+## VolPrice_ML.py
 
+<p float="left">
+  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/BA_ML_Predictions.png" height=300 />
+ <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/BA_ML_Predictions2.png" height=300 />
+</p>
 
 
 

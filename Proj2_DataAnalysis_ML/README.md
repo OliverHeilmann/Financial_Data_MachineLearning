@@ -170,12 +170,30 @@ Another interesting thing to note is that the [TV/AC]% peaks often align with on
 <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/TopBot_CompaniesChart.png" height=700>
 
 ## VolPrice_ML.py
+This script is the machine learning aspect of this project. Here, I have used a *Supervised Classification* method of training rather than a *Regression* (though I will be experimenting with this later). The code below calls the ML training function for which ever ticker is input by the user. If you do not wish to train a model, simply comment out the **model.run_model()** line.
 ```Python
 # Train Machine Learning Model (change ticker name after looking at above plots)
 tic = 'GFS.L'                                                                        #<---- USER INPUT HERE
 model = tickerML(ticker=tic, requirement=0.02, hm_days=10, comp=COMP)
 model.run_model()
 ```
+The way this function works is by setting a threshold %change in Adjusted Close price (**requirement=0.02** here). If the stock price increases by more than **2%** in **10** days (see **hm_days=10**) then this is a *BUY*. If it goes down by **2%** or more then it is a *SELL*; otherwise it is a *HOLD*. I use this decision to add an additional column to a *Pandas Dataframe* with BUY=1, SELL=-1, HOLD=0 on each row. See the code below.
+```Python
+# Turning this into a classification problem (not regression)
+def buy_sell_hold(self, *args):
+    # Each time this function is called, 'x' next days of values are
+    # passed through this for loop. As soon as the requirement is met,
+    # a value will be returned.
+    cols = [c for c in args]
+    for col in cols:
+        if col > self.requirement:
+            return 1
+        if col < -self.requirement:
+            return -1
+    # If not buy or sell then hold
+    return 0
+```
+
 <p float="left">
   <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/BA_ML_Predictions.png" height=300 />
  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/BA_ML_Predictions2.png" height=300 />

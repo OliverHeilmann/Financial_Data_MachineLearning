@@ -27,7 +27,7 @@ m_open = [8, 0, 0, 0]               # [hour, minute, second, microsecond]
 m_close = [16, 30, 0, 0]            # [hour, minute, second, microsecond]
     
 # Minute by Minute data collection filename
-filename = 'minute_by_minute_weekends.csv'
+filename = 'minute_by_minute.csv'
 
 # Get tickers from Wiki URL
 t_filename = 'FTSE250.pickle'
@@ -38,6 +38,7 @@ s_filename = 'TickerSuffix.pickle'
 yahooURL = 'https://help.yahoo.com/kb/exchanges-data-providers-yahoo-finance-sln2310.html'
 
 save = True
+store_weekend = False
 ####################### END OF MANUAL PARAMETERS #########################
 
 
@@ -46,7 +47,8 @@ class StoreLiveData:
     def __init__(self, save=True, ticker_no=10, threads=4, pull_step=60,
                      rows=15, zone=timezone('Europe/London'), m_open=[0,0,0,0],
                      m_close=[0,0,0,0], filename=None, t_filename=None, 
-                     tickerURL=None, s_filename=None, yahooURL=None):
+                     tickerURL=None, s_filename=None, yahooURL=None,
+                     store_weekend=False):
         
         # Passed parameters in Class
         self.save = save
@@ -64,6 +66,7 @@ class StoreLiveData:
         self.yahooURL = yahooURL
         self.ticker_no = ticker_no
         self.save = save
+        self.store_weekend = store_weekend
         
         # Setup of dataframe and threads
         self.df = []
@@ -84,23 +87,23 @@ class StoreLiveData:
     
     
     # Small function to send T/F logic for Exchange Trading Times
-    def stockmarket_openhours(self, tmzone, O, C):
+    def stockmarket_openhours(self, tmzone, O, C, sWE=False):
         ### NOTE: 'state = True': keep updating stock price over weekend  ####
         ### NOTE: 'state = False': stop updating stock price over weekend ####
-        store_weekend = True
+        store = sWE
         if isinstance(O, list) and isinstance(C, list):
             # Set Market Open/ Close times
             now = datetime.now(tmzone)
             m_open = now.replace(hour=O[0], minute=O[1], second=O[2], microsecond=O[3])
             m_close = now.replace(hour=C[0], minute=C[1], second=C[2], microsecond=C[3])
             
-            # Get day of week
+            # Get day of week (if between 08:30 and 16:30 and weekday then pass True)
             weekday = datetime.now(tmzone).weekday()
             if m_open <= datetime.now(tmzone) <= m_close and weekday <= 4:
-                store_weekend = True
+                store = True
         else:
             print('\nList not passed to stockmarket_openhours()\n')
-        return store_weekend
+        return store
 
 
     # Main script 
@@ -123,7 +126,7 @@ class StoreLiveData:
         #Main loop giving stock collection instructions
         try:
             while True:
-                state = self.stockmarket_openhours(self.zone, self.m_open, self.m_close)
+                state = self.stockmarket_openhours(self.zone, self.m_open, self.m_close, self.store_weekend)
                 if state == True:
                     # Make empty dataframe to append to
                     self.df = pd.DataFrame(columns = ['Date Time'] + tickers[:self.ticker_no])
@@ -170,5 +173,5 @@ class StoreLiveData:
 if __name__ == '__main__':
     begin = StoreLiveData(save, ticker_no, threads, pull_step, rows, zone,
                           m_open, m_close, filename, t_filename, tickerURL,
-                          s_filename, yahooURL)
+                          s_filename, yahooURL, store_weekend)
     begin.main()

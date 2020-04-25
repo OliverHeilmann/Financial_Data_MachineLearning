@@ -123,8 +123,15 @@ visualize_corr_data(csv_name=compilename, companies=view_comps, clean=True)
 </p>
 As with all of the plots presented here, the user is able to navigate around the tables/ graphs freely and zoom in on the companies they are interested in. This output alone people actually pay money for online so having this functionality for free is quite useful here. 
 
-### Price, Standardise, Percent Change: visualize_corr_data()
-
+### Price, Standardise, Percent Change: time_series_plot()
+This function outputs x3 graphs using the ticker data compiled into csv format. Notice that the fuction is repeated twice- the first is for the stock prices, and the second is for the trade volumes. The *for loop* is used to generate a total of 6 graphs. A'Percentage Change', 'Standardised' and 'Price' for both the stock prices and trade volumes.
+```Python
+# Plot company data/ use interactive plotter
+for i in ['Percentage Change', 'Standardised', 'Price']:
+    time_series_plot(csv_name=compilename, Type=i, companies=view_comps,clean=True, avg=False)
+    time_series_plot(csv_name=compilename_vol, Type=i, companies=view_comps,clean=True, avg=False)
+```
+Below is an illustration of the kind of output seen. An additional note is that the user can identify which line relates to which company by simply moving the mouse over the line in question. A pop-up box will appear with the ticker name (see below). On top of this, **avg=True** will plot an average line on the graph as well; this can be seen below as the thick red line.
 <p float="left">
   <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/StockPrices.png" height=300 />
  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/stndard.png" height=300 />

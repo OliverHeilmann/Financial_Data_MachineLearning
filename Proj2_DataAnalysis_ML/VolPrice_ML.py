@@ -164,6 +164,8 @@ class tickerML:
         clean_df = clean_df.replace([np.inf, -np.inf], 0) # Replace/ clean data again
         clean_df.fillna(0, inplace=True)
         
+        print('[TRADE VOLUME/ADJUSTED CLOSE]%CHANGE/DAY\n',clean_df)
+        
         # Replace All 0s with NaNs to stop skewing data
         #clean_df = clean_df.replace(0, np.nan)
         

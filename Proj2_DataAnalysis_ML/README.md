@@ -8,7 +8,7 @@ As the name suggests, this program is the main script of this project. The user 
 if __name__ == '__main__':
     # You should compile data on first run, not necesary for subsequent ones 
     # however the data will not update until recompiled.
-    collect_tickers_and_compile, COMP = True, True                   <---- USER INPUT
+    collect_tickers_and_compile, COMP = True, True                   #<---- USER INPUT HERE
     
     # Define CSV Filenames
     compilename = 'FTSE250_Compiled.csv'
@@ -17,14 +17,14 @@ if __name__ == '__main__':
     if collect_tickers_and_compile:
         # Adding additional tickers to tickerlist. Notice that there are
         # repeats. The program will not duplicate these.
-        add = ['IAG.L', 'GFS.L', 'BAB.L', 'AJB.L', 'K3C.L', 'CHG.L',         <---- USER INPUT
+        add = ['IAG.L', 'GFS.L', 'BAB.L', 'AJB.L', 'K3C.L', 'CHG.L',         #<---- USER INPUT HERE
                'EVR.L', 'CNA.L', 'FRAS.L', 'JDW.L', 'MAB.L','IAG.L', 
                'PSN.L', 'K3C.L', 'BOO.L', 'SSE.L', 'REL.L', 'EVR.L',
                'CNA.L', 'JEO.L', 'PHP.L', 'AJB.L', 'BA.L', 'MCX.L']
         
         # Get tickers from wikipedia
         t_filename = 'FTSE250.pickle'
-        tickerURL = 'https://en.wikipedia.org/wiki/FTSE_250_Index'           <---- USER INPUT
+        tickerURL = 'https://en.wikipedia.org/wiki/FTSE_250_Index'           #<---- USER INPUT HERE
         
         # Get ticker suffixes from Yahoo
         s_filename = 'TickerSuffix.pickle'
@@ -45,7 +45,7 @@ if __name__ == '__main__':
      
     # Are there any specific companies you want to view?
     # (make sure these are in compiled list before requesting to view)
-    #view_comps = ['IAG.L', 'GFS.L', 'BAB.L', 'AJB.L', 'K3C.L', 'JDW.L']         <---- USER INPUT
+    #view_comps = ['IAG.L', 'GFS.L', 'BAB.L', 'AJB.L', 'K3C.L', 'JDW.L']         #<---- USER INPUT HERE
     view_comps = None
     
     # Create a CORRELATION TABLE
@@ -57,7 +57,7 @@ if __name__ == '__main__':
         time_series_plot(csv_name=compilename_vol, Type=i, companies=view_comps,clean=True, avg=False)
      
     # Train Machine Learning Model (change ticker name after looking at above plots)
-    tic = 'GFS.L'                                                                        <---- USER INPUT
+    tic = 'GFS.L'                                                                        #<---- USER INPUT HERE
     model = tickerML(ticker=tic, requirement=0.02, hm_days=10, comp=COMP)
     model.run_model()
     
@@ -82,10 +82,12 @@ Ok so this is quite important- make sure you compile everything on your first ru
 ```Python
 # You should compile data on first run, not necesary for subsequent ones 
 # however the data will not update until recompiled.
-collect_tickers_and_compile, COMP = True, True                   <---- USER INPUT
+collect_tickers_and_compile, COMP = True, True                   #<---- USER INPUT HERE
 ```
 If you ever want to update your dataset/ keep your ticker prices up to date, just recompile the data again- the new information will be appended to the files you already have. Something like the image below will be displayed in your terminal. These files will be saved under the **stocks_dfs** directory.
--If there is no ticker file: *'Created file for {ticker} data'*
--If the ticker file already exists: *'Adding new data for {ticker}'*
--If you already have ticker: *'Already have {ticker}'*
+
+*If there is no ticker file: *'Created file for {ticker} data'*
+*If the ticker file already exists: *'Adding new data for {ticker}'*
+*If you already have ticker: *'Already have {ticker}'*
+
 <img src=https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/createfile.png height=500>

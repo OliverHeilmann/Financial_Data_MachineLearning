@@ -91,4 +91,34 @@ If you ever want to update your dataset/ keep your ticker prices up to date, jus
 - If you already have ticker: *'Already have {ticker}'*
 
 ## CollectTickers.py
-words...
+I won't go through the details of how the tickers are collected again as this is pretty well documented in the **README.md** file in **Proj1_...**. It is, in effect, the same thing as before with a few improvements. Additionally, it is organised under a *Class* which is better coding practice. The intention here was to be able to call this function in future programs as well as this one. I did however add the functionality do add additional companies to the ticker list- simply add the ticker (with the correct suffix) into the list indicated below and the relevant ticker data will be websrcaped and compiled along with the index you have provided in the Wikipedia link (see *tickerURL*).
+```Python
+if collect_tickers_and_compile:
+    # Adding additional tickers to tickerlist. Notice that there are
+    # repeats. The program will not duplicate these.
+    add = ['IAG.L', 'GFS.L', 'BAB.L', 'AJB.L', 'K3C.L', 'CHG.L',         #<---- USER INPUT HERE
+           'EVR.L', 'CNA.L', 'FRAS.L', 'JDW.L', 'MAB.L','IAG.L', 
+           'PSN.L', 'K3C.L', 'BOO.L', 'SSE.L', 'REL.L', 'EVR.L',
+           'CNA.L', 'JEO.L', 'PHP.L', 'AJB.L', 'BA.L', 'MCX.L']
+
+    ...
+
+    # setup the ticker webscraper function
+    YS = Market_Index_TickerList(s_filename, t_filename, yahooURL, tickerURL, save=True, add_companies=add)
+```
+
+## InteractivePlotter.py
+This script outputs a Correlation Table as well as a series of figures presenting Trade Volume and/or Stock Price data (either as a Percentage Change/ Day, Standardised, or Stock Price) for all the tickers you have selected and compiled.
+
+### Correlation Table: visualize_corr_data()
+
+```Python
+# Create a CORRELATION TABLE
+visualize_corr_data(csv_name=compilename, companies=view_comps, clean=True)
+```
+<img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/CorrPlot.png" height=500>
+
+
+Solarized dark             |  Solarized Ocean
+:-------------------------:|:-------------------------:
+![]("https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/CorrPlot.png" )  |  ![]("https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/CorrPlot.png" )

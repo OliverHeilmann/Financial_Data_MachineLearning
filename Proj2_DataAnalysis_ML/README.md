@@ -90,4 +90,5 @@ If you ever want to update your dataset/ keep your ticker prices up to date, jus
 - If the ticker file already exists: *'Adding new data for {ticker}'*
 - If you already have ticker: *'Already have {ticker}'*
 
-<img src=https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/createfile.png height=500>
+## CollectTickers.py
+words...

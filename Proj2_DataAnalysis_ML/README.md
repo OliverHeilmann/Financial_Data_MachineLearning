@@ -1,4 +1,122 @@
-# Collect Minute by Minute Stock Data
+# Stock Analysis & Machine Learning Model
+This project contains a blend of general stock market analysis, data handling/ manipulation, data presentation and finally, machine learning models aimed at predicting day-by-day stock price fluctuations. There are a total of five Python scripts and all of them are required to generate the graphs/ plots that are presented in this *README.md* note. As with the previous project, I will go through the general functionality of each program.
+
+## MAIN.py
+As the name suggests, this program is the main script of this project. The user should only have to interface with this script to get any/ all of the outputs displayed in this section. In order to get the most out of this project, the user should become familiar with every single line presented directly below. The reason for this is because almost every uncommented line has some functionality, whether it be to plot a graph, a correlation table, train a machine learning model or otherwise. Let's go through it now.
+```Python
+# Run functions if this is the main script
+if __name__ == '__main__':
+    # You should compile data on first run, not necesary for subsequent ones 
+    # however the data will not update until recompiled.
+    collect_tickers_and_compile, COMP = True, True 
+    
+    # Define CSV Filenames
+    compilename = 'FTSE250_Compiled.csv'
+    compilename_vol = 'FTSE250_TradeVol.csv'       
+    
+    if collect_tickers_and_compile:
+        # Adding additional tickers to tickerlist. Notice that there are
+        # repeats. The program will not duplicate these.
+        add = ['IAG.L', 'GFS.L', 'BAB.L', 'AJB.L', 'K3C.L', 'CHG.L',
+               'EVR.L', 'CNA.L', 'FRAS.L', 'JDW.L', 'MAB.L','IAG.L', 
+               'PSN.L', 'K3C.L', 'BOO.L', 'SSE.L', 'REL.L', 'EVR.L',
+               'CNA.L', 'JEO.L', 'PHP.L', 'AJB.L', 'BA.L', 'MCX.L']
+        
+        # Get tickers from wikipedia
+        t_filename = 'FTSE250.pickle'
+        tickerURL = 'https://en.wikipedia.org/wiki/FTSE_250_Index'
+        
+        # Get ticker suffixes from Yahoo
+        s_filename = 'TickerSuffix.pickle'
+        yahooURL = 'https://help.yahoo.com/kb/exchanges-data-providers-yahoo-finance-sln2310.html'
+        
+        # setup the ticker webscraper function
+        YS = Market_Index_TickerList(s_filename, t_filename, yahooURL, tickerURL,
+                                     save=True, add_companies=add)
+        
+        # collect day by day stock data from yahoo (Set reload=True to get new tickers)
+        get_data_from_yahoo(reload=True, ticker_funct=YS, picklepath=t_filename, startdate=[2005,1,1])
+        
+        # compile this information into x1 .csv file for later use and/or reference
+        compile_data(picklepath=t_filename , name=compilename)
+        
+        # compile trade volumes of all the companies into one csv
+        compile_data(picklepath=t_filename , name=compilename_vol, col_replace='Volume')
+     
+    # Are there any specific companies you want to view?
+    # (make sure these are in compiled list before requesting to view)
+    #view_comps = ['IAG.L', 'GFS.L', 'BAB.L', 'AJB.L', 'K3C.L', 'JDW.L']
+    view_comps = None
+    
+    # Create a CORRELATION TABLE
+    visualize_corr_data(csv_name=compilename, companies=view_comps, clean=True)
+    
+    # Plot company data/ use interactive plotter
+    for i in ['Percentage Change', 'Standardised', 'Price']:
+        time_series_plot(csv_name=compilename, Type=i, companies=view_comps,clean=True, avg=False)
+        time_series_plot(csv_name=compilename_vol, Type=i, companies=view_comps,clean=True, avg=False)
+     
+    # Train Machine Learning Model (change ticker name after looking at above plots)
+    tic = 'GFS.L'
+    model = tickerML(ticker=tic, requirement=0.02, hm_days=10, comp=COMP)
+    model.run_model()
+    
+    # Create a candlestick plot for a specific ticker
+    candlestickplot(tic)
+    
+    # Use below function to look at top/ bottom performing companies
+    f1 = 'TV_AC_Dataframe.csv'; f2 = 'PricesDF.csv'
+    tradevol_adjclose(TVAJfile=f1, Pfile= f2, showday=100, days=2, TpBt=3)
+```
+### User Defined Inputs
+Although I have given you the option to rename your csv filenames, it is not necessary to do so. A word of caution, changing these filenames between re-runs may crash the program as some of these files are called in differing sections of this project. It is fine to change the names of them but just make sure that you recompile everything afterward to ensure that the appropriate files are generated.
+
+With regards to the weblinks, I do not suggest changing the **yahooURL** link as this directs the program to the official yahoo-finance ticker suffix page. If you prefer to use another index (not FTSE 250 like I have for example), then go ahead and change the weblink for **tickerURL**; just make sure that you select the corresponding stock exchange when prompted in the terminal.
+```
+# Run functions if this is the main script
+if __name__ == '__main__':
+    # You should compile data on first run, not necesary for subsequent ones 
+    # however the data will not update until recompiled.
+    collect_tickers_and_compile, COMP = True, True              <---- USER INPUT
+    
+    # Define CSV Filenames
+    compilename = 'FTSE250_Compiled.csv'
+    compilename_vol = 'FTSE250_TradeVol.csv'       
+    
+    if collect_tickers_and_compile:
+        # Adding additional tickers to tickerlist. Notice that there are
+        # repeats. The program will not duplicate these.
+        add = ['IAG.L', 'GFS.L', 'BAB.L', 'AJB.L', 'K3C.L', 'CHG.L',        <---- USER INPUT
+               'EVR.L', 'CNA.L', 'FRAS.L', 'JDW.L', 'MAB.L','IAG.L', 
+               'PSN.L', 'K3C.L', 'BOO.L', 'SSE.L', 'REL.L', 'EVR.L',
+               'CNA.L', 'JEO.L', 'PHP.L', 'AJB.L', 'BA.L', 'MCX.L']
+        
+        # Get tickers from wikipedia
+        t_filename = 'FTSE250.pickle'
+        tickerURL = 'https://en.wikipedia.org/wiki/FTSE_250_Index'
+        
+        # Get ticker suffixes from Yahoo
+        s_filename = 'TickerSuffix.pickle'
+        yahooURL = 'https://help.yahoo.com/kb/exchanges-data-providers-yahoo-finance-sln2310.html'
+    
+    ...
+    
+    # Are there any specific companies you want to view?
+    # (make sure these are in compiled list before requesting to view)
+    #view_comps = ['IAG.L', 'GFS.L', 'BAB.L', 'AJB.L', 'K3C.L', 'JDW.L']
+    view_comps = None                                                       <---- USER INPUT
+
+    ...
+
+    # Train Machine Learning Model (change ticker name after looking at above plots)
+    tic = 'GFS.L'                                                            <---- USER INPUT
+```
+
+This project covers two main aspects of 
+
+- the first is general stock market analysis and data handling and the second is using these principles to generate a machine learning model to predict day by day stock price fluctuations.
+
+
 Overall, running the contents of this folder will create multiple threads which collect ticker data from Yahoo Finance continually, every minute, until stopped by the user. This is an easy script to run from a second computer (Raspberry Pi or Jetson Nano for instance). A .csv file will be generated and then appended every 15 minutes from starting the program. Below is a description of what each of the three Python scripts in this folder do.
 
 ## StoreLiveData.py

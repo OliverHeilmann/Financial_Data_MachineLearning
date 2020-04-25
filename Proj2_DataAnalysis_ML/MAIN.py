@@ -174,7 +174,3 @@ if __name__ == '__main__':
     # Use below function to look at top/ bottom performing companies
     f1 = 'TV_AC_Dataframe.csv'; f2 = 'PricesDF.csv'
     tradevol_adjclose(TVAJfile=f1, Pfile= f2, showday=100, days=2, TpBt=3)
-    
-    
-    
-    

@@ -262,5 +262,5 @@ class tickerML:
             
 # Run functions if this is the main script
 if __name__ == '__main__':
-    model = tickerML(ticker='FOUR.L', requirement=0.02, hm_days=10, comp=False)
+    model = tickerML(ticker='GFS.L', requirement=0.02, hm_days=10, comp=False)
     model.run_model()

@@ -71,6 +71,8 @@ def visualize_corr_data(csv_name=None, companies=None, clean=True):
     else:
         df = df.drop('Date', axis=1)
     
+    df = df[-20:]
+    
     # Calculate correlation results
     df_corr = df.corr()
     print(df_corr.head())

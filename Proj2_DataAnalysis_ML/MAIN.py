@@ -52,7 +52,7 @@ def get_data_from_yahoo(reload=False, ticker_funct=None, picklepath=None, startd
     for ticker in tickers:
         try:
             print(ticker)
-            df = pdr.get_data_yahoo(ticker, start, end)
+            df = abs(pdr.get_data_yahoo(ticker, start, end))
             df.reset_index(inplace=True)
             df.set_index("Date", inplace=True)
             if not os.path.exists('stock_dfs/{}.csv'.format(ticker)):

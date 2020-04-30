@@ -208,12 +208,16 @@ clf = VotingClassifier([('knn', neighbors.KNeighborsClassifier(n_neighbors=5, n_
 # Fit Data (i.e. do the machine learning)
 clf.fit(X_train, y_train)
 ```
+I optimised the input parameters for the KNN and RF classifier models- here is an example:
+<img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/RF_Optimised.png" height=600>
 
+Finally, I fit the model and make predictions on a test dataset (see **train_test_split**). The green dots indicate *BUY* predictions, red are *SELL* and black are *HOLD* as illustrated in the legend. Accuracies are presented in the title; in this case it was **42%** for GFS which is not too bad considering the type of data I was using and the simple approach taken. The accuracy here was actually increased significantly after only applying the [TV/AC]% approach mentioned earlier (from around 36% average accuracy before). 
 <p float="left">
   <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/BA_ML_Predictions.png" height=300 />
  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/BA_ML_Predictions2.png" height=300 />
 </p>
+If I revisit this in the future, I would like to use the correlation table data to suggest highly correlated companies to use in the ML model (rather than all of them which undoubtedly causes confusion in the model). Combining this with moving average data might further increase the accuracy- I suspect that this can be increased to around 50% without requiring a neural network for example.
 
-
-
-
+## Final Notes
+After successfully running the main script you will have produced the following files. Note that the ML model has also been pickled for use at a later date if required.
+ <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj2_DataAnalysis_ML/Pictures/createdfiles.png" height=300>

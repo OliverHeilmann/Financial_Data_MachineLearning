@@ -116,7 +116,7 @@ def compile_data(picklepath=None, name=None, comp=True, col_replace='Adj Close')
 if __name__ == '__main__':
     # You should compile data on first run, not necesary for subsequent ones 
     # however the data will not update until recompiled.
-    collect_tickers_and_compile, COMP = True, True
+    collect_tickers_and_compile, COMP = False, False
     
     # Define CSV Filenames
     compilename = 'FTSE250_Compiled.csv'
@@ -158,20 +158,20 @@ if __name__ == '__main__':
     view_comps = None
     
     # Create a CORRELATION TABLE
-    visualize_corr_data(csv_name=compilename, companies=view_comps, clean=True)
+    #visualize_corr_data(csv_name=compilename, companies=view_comps, clean=True)
     
     # Plot company data/ use interactive plotter
-    for i in ['Percentage Change', 'Standardised', 'Price']:
-        time_series_plot(csv_name=compilename, Type=i, companies=view_comps,clean=True, avg=False)
-        time_series_plot(csv_name=compilename_vol, Type=i, companies=view_comps,clean=True, avg=False)
+    for i in ['Standardised', 'Percentage Change', 'Price']:
+        #time_series_plot(csv_name=compilename, Type=i, companies=view_comps,clean=True, avg=True)
+        time_series_plot(csv_name=compilename_vol, Type=i, companies=view_comps,clean=True, avg=True)
      
     # Train Machine Learning Model (change ticker name after looking at above plots)
     tic = 'GFS.L'
     model = tickerML(ticker=tic, requirement=0.02, hm_days=10, comp=COMP)
-    model.run_model()
+    #model.run_model()
     
     # Create a candlestick plot for a specific ticker
-    candlestickplot(tic)
+    #candlestickplot(tic)
     
     # Use below function to look at top/ bottom performing companies
     f1 = 'TV_AC_Dataframe.csv'; f2 = 'PricesDF.csv'

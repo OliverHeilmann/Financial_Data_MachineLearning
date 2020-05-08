@@ -26,16 +26,12 @@ My Notes:
     webscraping functions. I added in a two second sleep function which has
     remedied this issue.
 """
-import validators
 import requests
 import bs4 as bs
 import pandas as pd
 import pickle
-import string
 from string import digits
 import datetime as dt
-from yahoo_fin import stock_info as si
-from pandas_datareader import data as pdr
 from yahoo_fin.stock_info import get_data
 import matplotlib.pyplot as plt
 from matplotlib.pylab import rcParams

@@ -77,7 +77,7 @@ def cumuVolpcnt(stocklist=[], start='03/01/2020', index='MCX'):
     stocklist.append(index)
     
     fig, (ax1, ax2) = plt.subplots(2)
-    fig.suptitle('GOLD MARKET VOLUME ASSESSMENT', size=20)
+    fig.suptitle('CUMULATIVE VOLUME %CHANGE', size=20)
     
     ax1 = plt.subplot2grid((11,1), (0,0), rowspan=5, colspan=1)
     ax2 = plt.subplot2grid((11,1), (6,0), rowspan=5, colspan=1, sharex=ax1)
@@ -86,7 +86,6 @@ def cumuVolpcnt(stocklist=[], start='03/01/2020', index='MCX'):
     ax1.set(ylabel='PRICE ({} index)'.format(index))
     ax2.set(ylabel='CUMULATIVE SUM %')
     
-    main_df = pd.DataFrame()
     for stock in stocklist:    
         # Get ticker data from yahoo in date range
         df = get_data(stock, start_date=start)
@@ -95,28 +94,31 @@ def cumuVolpcnt(stocklist=[], start='03/01/2020', index='MCX'):
         df['cum_sum'] = df['volume'].cumsum()
         df['{}_Cumu%'.format(stock)] = df['cum_sum']/df['volume'].sum()
         
-        if len(main_df)==0:
-            main_df['{}_Cumu%'.format(stock)] = df['{}_Cumu%'.format(stock)]
-        else:
-            main_df = main_df.join(df['{}_Cumu%'.format(stock)])
-    
-    main_df.fillna(method="ffill", inplace=True)  # if gaps in data, use prev vals
-    main_df.dropna(inplace=True)    # drop any additional NaNs
+        ax1.plot(df.index, df['adjclose'], label=stock)  # plot index
+        ax2.plot(df.index, df['{}_Cumu%'.format(stock)], label=stock)
+        
+#        if len(main_df)==0:
+#            main_df['{}_Cumu%'.format(stock)] = df['{}_Cumu%'.format(stock)]
+#        else:
+#            main_df = main_df.join(df['{}_Cumu%'.format(stock)])
+#    
+#    main_df.fillna(method="ffill", inplace=True)  # if gaps in data, use prev vals
+#    main_df.dropna(inplace=True)    # drop any additional NaNs
     
     # Straight line for reference
     x = [df.index[0], df.index[-1]]; y = [0,1 ]
     nums = {'Date': x,'Reference': y}
     line = pd.DataFrame(nums, columns = ['Date', 'Reference']).set_index('Date')
-    print(main_df.join(line).head())
+    #print(main_df.join(line).head())
     
     # Plotting data
     ax2.plot(line.index, line, linewidth=4, label='Reference') # reference line
     
-    # now cumsum%
-    for stock in stocklist:
-        if stock == 'MCX':
-            ax1.plot(df.index, df['adjclose'], label=stock)  # plot index
-        ax2.plot(main_df.index, main_df['{}_Cumu%'.format(stock)], label=stock)
+#    # now cumsum%
+#    for stock in stocklist:
+#        if stock == 'MCX':
+#            ax1.plot(df.index, df['adjclose'], label=stock)  # plot index
+#        ax2.plot(main_df.index, main_df['{}_Cumu%'.format(stock)], label=stock)
     
     handles, labels = ax2.get_legend_handles_labels()
     fig.legend(handles, labels, loc='upper right')
@@ -347,7 +349,7 @@ def financialDF(stocklist=['AAPL', 'TXG'], update=True):
 
 def plotFunds(ticker, revenueDF, grossprofitDF, netincomeDF):
     fig, (ax1, ax2, ax3) = plt.subplots(3)
-    fig.suptitle(f'{ticker}: Total Revenue, Gross Profit and Net Income Plots', size=25)
+    fig.suptitle(f'{ticker}: TOTAL REVENUE, GROSS PROFIT AND NET INCOME PLOTS', size=25)
 
     ax1 = plt.subplot2grid((17,1), (0,0), rowspan=5, colspan=1)
     ax2 = plt.subplot2grid((17,1), (6,0), rowspan=5, colspan=1, sharex=ax1)
@@ -411,9 +413,17 @@ def prelimScreen(df, rev_df, grossp_df, netinc_df):
                         plotFunds(ind, rev_df, grossp_df, netinc_df)
                         ans = input('Show more info? (y/n)').lower()
                         if ans == 'y':
-                            print(mydata[ind])             
+                            print(mydata[ind])
+                        ans = input('Show cumulative volume %change? (y/n)').lower()
+                        if ans == 'y':
+                            try:
+                                # Call cumulative volume % function
+                                cumuVolpcnt(stocklist=[ind], start='03/01/2020')
+                            except:
+                                print('Unofrtunately, no data available.')
         except Exception as E:
             print(f'\n{ind}: {E}. {ind} likely operating in the red.\n')
+
 
 # Run if the main script
 if __name__ == '__main__':            
@@ -450,7 +460,7 @@ if __name__ == '__main__':
     prelimScreen(dataframe, rev_df, grossp_df, netinc_df)
     
     # Call cumulative volume % function and plot data (separate project)
-    #cumuVolpcnt(stocklist=passlist, start='01/01/2020')
+    #cumuVolpcnt(stocklist=passlist[3:8], start='01/01/2020')
     
     #data = getQuandl()
     #print(data)

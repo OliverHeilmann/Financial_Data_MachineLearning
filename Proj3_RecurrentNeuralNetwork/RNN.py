@@ -20,12 +20,16 @@ from sklearn import preprocessing
 Use:
     tensorboard --logdir=logs   # in terminal
     http://127.0.0.1:6006/      # in browser
+    
+Plotting:
+    %matplotlib qt        --> as po-pup
+    %matplotlib inline    --> in shell
 '''
 
 SEQ_LEN = 60  # how long of a preceeding sequence to collect for RNN
 FUTURE_PERIOD_PREDICT = 3  # how far into the future are we trying to predict?
 RATIO_TO_PREDICT = "GFS.L"
-EPOCHS = 10  # how many passes through our data
+EPOCHS = 3  # how many passes through our data
 BATCH_SIZE = 64  # how many batches? Try smaller batch if you're getting OOM (out of memory) errors.
 NAME = f"{RATIO_TO_PREDICT}-{SEQ_LEN}-SEQ-{FUTURE_PERIOD_PREDICT}-PRED-{int(time.time())}"
 

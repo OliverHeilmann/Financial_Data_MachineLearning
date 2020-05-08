@@ -72,7 +72,7 @@ To be used later:
 
 
 # Create a plot of cumulative volume percentage
-def cumuVolpcnt(stocklist=[], start='03/01/2020', index='MCX'):
+def cumuVolpcnt(stocklist=[], start='03/01/2020', index='MCX', prices=True):
     # Add index to list
     stocklist.append(index)
     
@@ -94,16 +94,10 @@ def cumuVolpcnt(stocklist=[], start='03/01/2020', index='MCX'):
         df['cum_sum'] = df['volume'].cumsum()
         df['{}_Cumu%'.format(stock)] = df['cum_sum']/df['volume'].sum()
         
-        ax1.plot(df.index, df['adjclose'], label=stock)  # plot index
+        if prices or stock == index:
+            # Potentially don't want multiple stocks displayed here
+            ax1.plot(df.index, df['adjclose'], label=stock)
         ax2.plot(df.index, df['{}_Cumu%'.format(stock)], label=stock)
-        
-#        if len(main_df)==0:
-#            main_df['{}_Cumu%'.format(stock)] = df['{}_Cumu%'.format(stock)]
-#        else:
-#            main_df = main_df.join(df['{}_Cumu%'.format(stock)])
-#    
-#    main_df.fillna(method="ffill", inplace=True)  # if gaps in data, use prev vals
-#    main_df.dropna(inplace=True)    # drop any additional NaNs
     
     # Straight line for reference
     x = [df.index[0], df.index[-1]]; y = [0,1 ]
@@ -113,12 +107,6 @@ def cumuVolpcnt(stocklist=[], start='03/01/2020', index='MCX'):
     
     # Plotting data
     ax2.plot(line.index, line, linewidth=4, label='Reference') # reference line
-    
-#    # now cumsum%
-#    for stock in stocklist:
-#        if stock == 'MCX':
-#            ax1.plot(df.index, df['adjclose'], label=stock)  # plot index
-#        ax2.plot(main_df.index, main_df['{}_Cumu%'.format(stock)], label=stock)
     
     handles, labels = ax2.get_legend_handles_labels()
     fig.legend(handles, labels, loc='upper right')
@@ -418,7 +406,7 @@ def prelimScreen(df, rev_df, grossp_df, netinc_df):
                         if ans == 'y':
                             try:
                                 # Call cumulative volume % function
-                                cumuVolpcnt(stocklist=[ind], start='03/01/2020')
+                                cumuVolpcnt(stocklist=[ind], start='03/01/2020', prices=True)
                             except:
                                 print('Unofrtunately, no data available.')
         except Exception as E:

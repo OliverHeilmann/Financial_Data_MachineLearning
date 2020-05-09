@@ -1,3 +1,21 @@
+# Stock Screnner: A Fundamental Approach to Trading
+Building on the works from earlier projects, I have now created a general stock screening tool aimed at finding companies that are undervalued (Value Investing). At the time of writing this, COVID-19 has significantly pulled down stock market values across the world and, as a result, many companies have been deemed to be "undervalued" by the metrics used here. For instance, I noticed that many (almost exlusively) financial and energy sector companies were suggested to be undervalued by this program. Of course, there are larger factors at play here that may disagree with these outputs: 
+- What are these sectors going to look like in the future (thinking about renewables vs Crude/LNG)?
+- How will global energy consumption change as a result of this pandemic?
+- What time scales are we concerned with?
+- The list goes on...
+
+As should already be obvious, this stock screener is not a silver bullet and was developed for academic purposes- all of the projects in this Github repository should be treated as such. 
+
+# Project Specifics
+Looking more specifically at the contents of this folder, I tried to keep all the code small enough to be in one script. I realised that the previous projects were getting a bit out of hand regarding backward and forward dependencies on scripts- this was becoming a bit challenging for me to debug/ improve/ change parameters, especially with all of them requiring .csv files, .pickle files etc. everywhere. For this project, I made a point to keep it more streamlined so I hope this comes through. I think the best approach to take with this project 
+
+
+This project contains a blend of general stock market analysis, data handling/ manipulation, data presentation and finally, machine learning models aimed at predicting day-by-day stock price fluctuations. There are a total of five Python scripts and all of them are requi
+
+# Value Investing
+
+
 # Stock Analysis & Machine Learning Model
 This project contains a blend of general stock market analysis, data handling/ manipulation, data presentation and finally, machine learning models aimed at predicting day-by-day stock price fluctuations. There are a total of five Python scripts and all of them are required to generate the graphs/ plots that are presented in this *README.md* note. As with the previous project, I will go through the general functionality of each program.
 

@@ -55,7 +55,7 @@ Plotting:
 '''
 To be used later:
     import quandl
-    quandl.ApiConfig.api_key = '9baucNgmhMRN9hpsJDE3'
+    quandl.ApiConfig.api_key = 'YOUR QUANDL KEY HERE'
     mydata = quandl.get('EURONEXT/ADYEN', ticker=stock[:-2], start_date='2010-05-05', end_date='2020-05-05')
     mydata.plot()
 '''

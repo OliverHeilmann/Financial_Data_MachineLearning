@@ -98,10 +98,15 @@ See the following section of code:
 ### Data Presentation 1:
 Upon finding a company that has met the requirments, the user is prompted whether they would like more information. If their input is *y* then the following is displayed.
 <p align="center">
-  <img width="600" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/1plot.png">
+  <img width="750" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/1plot.png">
 </p>
 
 ### Data Presentation 2:
+If further financial information is requested by the user then the following is displayed:
+<p align="center">
+  <img width="750" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/2moreinfo.png">
+</p>
+
 ### Data Presentation 3:
 
 ## Further Investigation:

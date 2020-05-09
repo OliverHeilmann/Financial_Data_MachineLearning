@@ -128,8 +128,9 @@ Following the narative of this example, we might wish to look into ASIX in more 
 
 <p align="center">
   <img width="750" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/4web.png">
-   <img width="750" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/4web.png">
+   <img width="750" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/5web.png">
 </p>
 
-# Final Outputs
+## Outputs
 
+# Final Notes

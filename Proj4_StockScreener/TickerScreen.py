@@ -444,10 +444,10 @@ if __name__ == '__main__':
     goldlist = ['AUY', 'GOLD', 'KGC', 'NG', 'TXG']
     
     # IF YOU CHANGE LIST YOU MUST UPDATE DATAFRAMES (update=True)
-    passlist = tickers
+    passlist = tickers[220:240]
 
     # Collect Yahoo Fundamental tickerlist data
-    dataframe = valuationDF(stocklist=passlist, update=False)
+    dataframe = valuationDF(stocklist=passlist, update=True)
     
     # Get Revenue, Gross Profit, Net Income data for all tickers
     rev_df, grossp_df, netinc_df = financialDF(stocklist=passlist, update=True)

@@ -232,7 +232,8 @@ def financialDF(stocklist=['AAPL', 'TXG'], update=True):
                             rowdata.append(el.text)
                         tabledata.append(rowdata)
                 else:
-                    print(f'No data found on Yahoo for {stock}')
+                    print(f'\nDataset not found for {stock}: _________\n')
+                    continue
                 
                 # Put all data collected in dataframe
                 df = pd.DataFrame(tabledata)
@@ -241,14 +242,19 @@ def financialDF(stocklist=['AAPL', 'TXG'], update=True):
                 df = df.reset_index(drop=True)
                 
                 # Get row index of the information we want (sometimes differs)
-                ints = []
-                for el in ['Total Revenue', 'Gross Profit', 'Net Income']:
+                ints = []; trigger = False
+                DATA = ['Total Revenue', 'Gross Profit', 'Net Income Common Stockholders']
+                for el in DATA:
                     try:
                         ints.append(df.loc[df['Breakdown'] == el].index[0])
-                    except Exception as E:
-                        print(f'\n{E}: No data found for {stock}: {el}')
-                        print(f'Total Revenue data will be populated in the plot instead to avoid system crash!\n')
-                        ints.append(0)      # must return something or CRASH
+                    except:
+                        trigger = True
+                        print(f'\nDataset not found for {stock}: No {el}\n')
+                        break
+              
+                # If data was not found we skip the ticker
+                if trigger:
+                    continue
                 
                 # Set index to Breakdown column
                 df.set_index('Breakdown', inplace=True)
@@ -258,15 +264,15 @@ def financialDF(stocklist=['AAPL', 'TXG'], update=True):
                 if stocklist.index(stock)==0:                    
                     # Make Total Profit DF
                     rev_df = pd.DataFrame(df.iloc[ints[0]])
-                    rev_df.rename(columns={'Total Revenue':'{}'.format(stock)}, inplace=True)
+                    rev_df.rename(columns={DATA[0]:'{}'.format(stock)}, inplace=True)
                     
                     # Make Gross Profit DF
                     grossp_df = pd.DataFrame(df.iloc[ints[1]])
-                    grossp_df.rename(columns={'Gross Profit':'{}'.format(stock)}, inplace=True)
+                    grossp_df.rename(columns={DATA[1]:'{}'.format(stock)}, inplace=True)
                     
                     # Make Net Income DF
                     netinc_df = pd.DataFrame(df.iloc[ints[2]])
-                    netinc_df.rename(columns={'Net Income':'{}'.format(stock)}, inplace=True)
+                    netinc_df.rename(columns={DATA[2]:'{}'.format(stock)}, inplace=True)
                     
                 else:
                     # Merge Total Profit DF
@@ -287,6 +293,8 @@ def financialDF(stocklist=['AAPL', 'TXG'], update=True):
             except Exception as E:
                 print(f'{E}: Yahoo connection potentially refused!')
 
+        pdb.set_trace()
+        
         # Replace 'total to month with date today
         now = dt.now()
         rev_df.rename(index={'ttm': now}, inplace=True)
@@ -442,7 +450,7 @@ if __name__ == '__main__':
     dataframe = valuationDF(stocklist=passlist, update=False)
     
     # Get Revenue, Gross Profit, Net Income data for all tickers
-    rev_df, grossp_df, netinc_df = financialDF(stocklist=passlist, update=False)
+    rev_df, grossp_df, netinc_df = financialDF(stocklist=passlist, update=True)
 
     # Perform preliminary screen using dataframe data
     prelimScreen(dataframe, rev_df, grossp_df, netinc_df)

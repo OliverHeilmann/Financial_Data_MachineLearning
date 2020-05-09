@@ -5,16 +5,22 @@ Building on the works from earlier projects, I have now created a general stock 
 - What time scales are we concerned with?
 - The list goes on...
 
-As should already be obvious, this stock screener is not a silver bullet and was developed for academic purposes- all of the projects in this Github repository should be treated as such. 
+Looking more specifically at the contents of this folder, I tried to keep all the code small enough to be in one script. I realised that the previous projects were getting a bit out of hand regarding backward and forward dependencies on scripts- this was becoming a bit challenging for me to debug/ improve/ change parameters, especially with all of them requiring .csv files, .pickle files etc. everywhere. For this project, I made a point to keep it more streamlined so I hope this comes through. I think the best approach to take with this project is to go chronologically through what a user would see in the terminal when first running the script- I will explain some code snippets along the way. As should already be obvious, this stock screener is by no means a silver bullet for trading and was developed exclusively for academic purposes- all of the projects in this Github repository should be treated as such. 
 
-# Project Specifics
-Looking more specifically at the contents of this folder, I tried to keep all the code small enough to be in one script. I realised that the previous projects were getting a bit out of hand regarding backward and forward dependencies on scripts- this was becoming a bit challenging for me to debug/ improve/ change parameters, especially with all of them requiring .csv files, .pickle files etc. everywhere. For this project, I made a point to keep it more streamlined so I hope this comes through. I think the best approach to take with this project 
+# TickerScraper.py 
+## Webscraping: Financial Statistics
+The first thing that you will see displayed in the terminal when running this script is text saying *GETTING VALUATION DATA:*. As you might suspect, that is exacly what the first stage of the code is designed to do. The data is pulled from Yahoo
 
+<img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj1_Webscrape_Min_by_Min/Pictures/request.png" height=500>
 
-This project contains a blend of general stock market analysis, data handling/ manipulation, data presentation and finally, machine learning models aimed at predicting day-by-day stock price fluctuations. There are a total of five Python scripts and all of them are requi
+## Stock Screen:
+### Data Presentation 1:
+### Data Presentation 2:
+### Data Presentation 3:
 
-# Value Investing
+## Further Investigation:
 
+# Final Outputs
 
 # Stock Analysis & Machine Learning Model
 This project contains a blend of general stock market analysis, data handling/ manipulation, data presentation and finally, machine learning models aimed at predicting day-by-day stock price fluctuations. There are a total of five Python scripts and all of them are required to generate the graphs/ plots that are presented in this *README.md* note. As with the previous project, I will go through the general functionality of each program.

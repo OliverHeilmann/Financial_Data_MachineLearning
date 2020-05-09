@@ -444,7 +444,7 @@ if __name__ == '__main__':
     goldlist = ['AUY', 'GOLD', 'KGC', 'NG', 'TXG']
     
     # IF YOU CHANGE LIST YOU MUST UPDATE DATAFRAMES (update=True)
-    passlist = tickers[220:240]
+    passlist = tickers[220:240] # I only want 20 tickers (of 1000) for demonstration
 
     # Collect Yahoo Fundamental tickerlist data
     dataframe = valuationDF(stocklist=passlist, update=True)

@@ -25,7 +25,82 @@ I noticed was that Yahoo refused my requests if no delay was added to the webscr
 The final point here would be that Yahoo has a very inconsistently populated webpage which makes it quite difficult to collect specific information. As a means of error handling, I have dropped all the tickers which do not return the information that I am scanning for.
 
 ## Stock Screen:
+For this section, it is worth having a look at the code to see what is going on *under the hood*. As you can see from this code, there are a series of *if* statements and user *inputs* which determine what level of information is given to the user.
+
+```Python
+# Do preliminary screen on passed dataframe
+def prelimScreen(df, rev_df, grossp_df, netinc_df):
+    print('-------RUNNING STOCK SCREENER--------\n')
+    # Clean dataframe. This gets rid of % and billions so must update
+    # at some point. Not important at the moment as we do not use these
+    # values anyway...
+    mydata = copy.deepcopy(df)
+    df = dfnumerize(df)
+    
+    pbr = df.iloc[6]
+    peg = df.iloc[4]
+    tpe = df.iloc[2]
+    tde = df.iloc[-5]
+    
+    for ind, v1, v2, v3, v4 in zip(df.columns, pbr, peg, tpe, tde):
+        try:
+            #print(f'{ind}: {v1}, {v2}, {v3}, {v4}')
+            # Should be v1 < 1, v2 < 1, v3 < 13, v4-->N/A
+            if float(v1)<1 and 0<float(v2)<1 and float(v3)<13:
+                print(f'''
+                      {ind} meets requirements:
+                      -->Price to Book: {v1}
+                      -->PEG (5 year): {v2}
+                      -->Trailing PE: {v3}
+                      -->Debt Equity: {v4}
+                      ''')
+                # Collecting data between two pages might be asymetric
+                if ind in rev_df.columns:
+                    ans = input('Show financial charts? (y/n)').lower()
+                    if ans == 'y':
+                        # Plot the collected data for a specific ticker
+                        plotFunds(ind, rev_df, grossp_df, netinc_df)
+                        ans = input('Show more info? (y/n)').lower()
+                        if ans == 'y':
+                            print(mydata[ind])
+                        ans = input('Show cumulative volume %change? (y/n)').lower()
+                        if ans == 'y':
+                            try:
+                                # Call cumulative volume % function
+                                cumuVolpcnt(stocklist=[ind], start='03/01/2020', prices=True)
+                            except:
+                                print('Unofrtunately, no data available.')
+        except Exception as E:
+            print(f'\n{ind}: {E}. {ind} likely operating in the red.\n')
+```
+
+If the following conditions are met, then the user will be prompted if they would like further information on the company:
+- Price to Book < 1
+- 0 < PEG (5 year) < 1
+- Trailing Price/Earnings < 13
+- Debt Equity has no requirement currently
+
+See the following section of code:
+```Python
+ for ind, v1, v2, v3, v4 in zip(df.columns, pbr, peg, tpe, tde):
+        try:
+            #print(f'{ind}: {v1}, {v2}, {v3}, {v4}')
+            # Should be v1 < 1, v2 < 1, v3 < 13, v4-->N/A
+            if float(v1)<1 and 0<float(v2)<1 and float(v3)<13:
+                print(f'''
+                      {ind} meets requirements:
+                      -->Price to Book: {v1}
+                      -->PEG (5 year): {v2}
+                      -->Trailing PE: {v3}
+                      -->Debt Equity: {v4}
+                      ''')
+```
 ### Data Presentation 1:
+Upon finding a company that has met the requirments, the user is prompted whether they would like more information. If their input is *y* then the following is displayed.
+<p align="center">
+  <img height="400" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/1plot.png">
+</p>
+
 ### Data Presentation 2:
 ### Data Presentation 3:
 

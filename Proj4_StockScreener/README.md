@@ -12,7 +12,7 @@ Looking more specifically at the contents of this folder, I tried to keep all th
 The first thing that you will see displayed in the terminal when running this script is text saying *GETTING VALUATION DATA:*. As you might suspect, that is exacly what the first stage of the code is designed to do. The data is pulled from Yahoo (see an example of one of the webpages below). Additionally, the weblink for each ticker being webscraped is printed in the terminal so the user can visit the webpage if needed (*No copywrite infringement intended*).
 
 <p align="center">
-  <img height="400" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/000Yahoo.png">
+  <img height="500" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/000Yahoo.png">
 </p>
 
 I noticed was that Yahoo refused my requests if no delay was added to the webscraping functions. I added in a two second sleep function which has remedied this issue. With a 2 second delay, it will take roughly an hour to collect all of the data for the S&P 1000 (I appreciate that you may wish to use a different ticker list). It would be fairly straight forward to break this task into smaller workpackages and use multithreading. I have already done this in Proj1 FetchPrice_GithubUpload.py file so this would only be an exercise is saving time rather than learning new skills. For those who want to apply multithreading, I suggest looking at that file. Below is an example of what a user might see in their terminal.
@@ -104,10 +104,24 @@ Upon finding a company that has met the requirments, the user is prompted whethe
 ### Data Presentation 2:
 If further financial information is requested by the user then the following is displayed:
 <p align="center">
-  <img width="750" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/2moreinfo.png">
+  <img width="550" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/2moreinfo.png">
 </p>
 
 ### Data Presentation 3:
+If even more information is required, the user can request a plot comparing the company stock price to an index- in my case I used FTSE 250 but this can be changed by simply replacing the index='MCX' on the following line of code: 
+
+```Python
+# Create a plot of cumulative volume percentage
+def cumuVolpcnt(stocklist=[], start='03/01/2020', index='MCX', prices=True):
+    # Add index to list
+    stocklist.append(index)
+```
+
+This section is the one whcih probably needs most work. Ideally, I would like to display other data here such as Force and Market Mommentum which use a combination of stock price and trade volume. The lower plot of the two was an experiment of mine to determine whether any useful information can be extracted from looking at trade volumes for a given time frame (the start date can be changed in the same line of code as above *start='-----'*).
+
+<p align="center">
+  <img width="750" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/3plot.png">
+</p>
 
 ## Further Investigation:
 

@@ -13,6 +13,10 @@ is presented to the user (along with further data). Additionally, this code save
 the data in csv files saving time on re-runs.
 
 My Notes:
+    I noticed was that Yahoo refused my requests if no delay was added to the 
+    webscraping functions. I added in a two second sleep function which has
+    remedied this issue.
+    
     So I have realised that collecting large quantities of tickers is going
     to take a long time. With a 2 second delay, it will take roughly an hour
     to collect all of the data. It would be fairly straight forward to break
@@ -21,10 +25,6 @@ My Notes:
     an exercise is saving time rather than learning new skills. For those who
     want to apply multithreading, I suggest looking at that file. For now, 
     I will kill the time making dinner.
-    
-    I noticed was that Yahoo refused my requests if no delay was added to the 
-    webscraping functions. I added in a two second sleep function which has
-    remedied this issue.
 """
 import requests
 import bs4 as bs

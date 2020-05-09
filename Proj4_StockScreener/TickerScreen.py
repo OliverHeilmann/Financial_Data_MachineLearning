@@ -292,8 +292,6 @@ def financialDF(stocklist=['AAPL', 'TXG'], update=True):
             
             except Exception as E:
                 print(f'{E}: Yahoo connection potentially refused!')
-
-        pdb.set_trace()
         
         # Replace 'total to month with date today
         now = dt.now()
@@ -343,6 +341,7 @@ def financialDF(stocklist=['AAPL', 'TXG'], update=True):
     return rev_df, grossp_df, netinc_df
 
 
+# Plot the data collected from the Financials folder
 def plotFunds(ticker, revenueDF, grossprofitDF, netincomeDF):
     fig, (ax1, ax2, ax3) = plt.subplots(3)
     fig.suptitle(f'{ticker}: TOTAL REVENUE, GROSS PROFIT AND NET INCOME PLOTS', size=25)

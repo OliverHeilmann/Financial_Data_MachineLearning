@@ -12,7 +12,7 @@ Looking more specifically at the contents of this folder, I tried to keep all th
 The first thing that you will see displayed in the terminal when running this script is text saying *GETTING VALUATION DATA:*. As you might suspect, that is exacly what the first stage of the code is designed to do. The data is pulled from Yahoo (see an example of one of the webpages below). Additionally, the weblink for each ticker being webscraped is printed in the terminal so the user can visit the webpage if needed (*No copywrite infringement intended*).
 
 <p align="center">
-  <img widht="450" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/000Yahoo.png">
+  <img height="400" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/000Yahoo.png">
 </p>
 
 I noticed was that Yahoo refused my requests if no delay was added to the webscraping functions. I added in a two second sleep function which has remedied this issue. With a 2 second delay, it will take roughly an hour to collect all of the data for the S&P 1000 (I appreciate that you may wish to use a different ticker list). It would be fairly straight forward to break this task into smaller workpackages and use multithreading. I have already done this in Proj1 FetchPrice_GithubUpload.py file so this would only be an exercise is saving time rather than learning new skills. For those who want to apply multithreading, I suggest looking at that file. Below is an example of what a user might see in their terminal.
@@ -98,7 +98,7 @@ See the following section of code:
 ### Data Presentation 1:
 Upon finding a company that has met the requirments, the user is prompted whether they would like more information. If their input is *y* then the following is displayed.
 <p align="center">
-  <img height="400" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/1plot.png">
+  <img width="400" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/1plot.png">
 </p>
 
 ### Data Presentation 2:

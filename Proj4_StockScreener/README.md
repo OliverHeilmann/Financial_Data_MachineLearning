@@ -11,13 +11,15 @@ Looking more specifically at the contents of this folder, I tried to keep all th
 ## Webscraping: Financial Statistics
 The first thing that you will see displayed in the terminal when running this script is text saying *GETTING VALUATION DATA:*. As you might suspect, that is exacly what the first stage of the code is designed to do. The data is pulled from Yahoo (see an example of one of the webpages below). Additionally, the weblink for each ticker being webscraped is printed in the terminal so the user can visit the webpage if needed.
 
-<img align="center" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/000Yahoo.png" height=500>
+<p align="center">
+  <img height="400" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/000Yahoo.png">
+</p>
 
 I noticed was that Yahoo refused my requests if no delay was added to the webscraping functions. I added in a two second sleep function which has remedied this issue. With a 2 second delay, it will take roughly an hour to collect all of the data for the S&P 1000 (I appreciate that you may wish to use a different ticker list). It would be fairly straight forward to break this task into smaller workpackages and use multithreading. I have already done this in Proj1 FetchPrice_GithubUpload.py file so this would only be an exercise is saving time rather than learning new skills. For those who want to apply multithreading, I suggest looking at that file. Below is an example of what a user might see in their terminal.
 
 <p float="left">
-  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/0CollectData.png" width=525 />
- <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/00CollectData.png" width=375 />
+  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/0CollectData.png" width=535 />
+ <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/00CollectData.png" width=365 />
 </p>
 
 The final point here would be that Yahoo has a very inconsistently populated webpage which makes it quite difficult to collect specific information. As a means of error handling, I have dropped all the tickers which do not return the information that I am scanning for.

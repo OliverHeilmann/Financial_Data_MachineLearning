@@ -7,7 +7,9 @@ Building on the works from earlier projects, I have now created a general stock 
 
 Looking more specifically at the contents of this folder, I tried to keep all the code small enough to be in one script. I realised that the previous projects were getting a bit out of hand regarding backward and forward dependencies on scripts- this was becoming a bit challenging for me to debug/ improve/ change parameters, especially with all of them requiring .csv files, .pickle files etc. everywhere. For this project, I made a point to keep it more streamlined so I hope this comes through. I think the best approach to take with this project is to go chronologically through what a user would see in the terminal when first running the script- I will explain some code snippets along the way. As should already be obvious, this stock screener is by no means a silver bullet for trading and was developed exclusively for academic purposes- all of the projects in this Github repository should be treated as such. 
 
-# TickerScraper.py 
+# TickerScraper.py
+**Note: that the CollectTickers.py function, developed in Proj2, is used here to collect the users list of tickers.**
+
 ## Webscraping: Financial Statistics
 The first thing that you will see displayed in the terminal when running this script is text saying *GETTING VALUATION DATA:*. As you might suspect, that is exacly what the first stage of the code is designed to do. The data is pulled from Yahoo (see an example of one of the webpages below). Additionally, the weblink for each ticker being webscraped is printed in the terminal so the user can visit the webpage if needed (*No copywrite infringement intended*).
 
@@ -132,5 +134,9 @@ Following the narative of this example, we might wish to look into ASIX in more 
 </p>
 
 ## Outputs
+<p align="center">
+   <img width="750" src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/6outputs.png">
+</p>
 
 # Final Notes
+I did not focus too much on the functionality of the code above as it is fairly straight forward. Some of the other projects have a more detailed description of the code itself but this is probably a product of its complexity. As this project only contained 1 script, I think it is easy to follow the code without too much commentary. 

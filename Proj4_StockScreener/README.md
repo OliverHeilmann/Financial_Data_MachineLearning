@@ -16,8 +16,8 @@ The first thing that you will see displayed in the terminal when running this sc
 I noticed was that Yahoo refused my requests if no delay was added to the webscraping functions. I added in a two second sleep function which has remedied this issue. With a 2 second delay, it will take roughly an hour to collect all of the data for the S&P 1000 (I appreciate that you may wish to use a different ticker list). It would be fairly straight forward to break this task into smaller workpackages and use multithreading. I have already done this in Proj1 FetchPrice_GithubUpload.py file so this would only be an exercise is saving time rather than learning new skills. For those who want to apply multithreading, I suggest looking at that file. Below is an example of what a user might see in their terminal.
 
 <p float="left">
-  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/0CollectData.png" width=450 />
- <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/00CollectData.png" width=450 />
+  <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/0CollectData.png" width=400 />
+ <img src="https://github.com/OliverHeilmann/Financial_Data_MachineLearning/blob/master/Proj4_StockScreener/Pictures/00CollectData.png" width=500 />
 </p>
 
 The final point here would be that Yahoo has a very inconsistently populated webpage which makes it quite difficult to collect specific information. As a means of error handling, I have dropped all the tickers which do not return the information that I am scanning for.

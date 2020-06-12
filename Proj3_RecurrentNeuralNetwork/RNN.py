@@ -8,13 +8,14 @@ import pandas as pd
 from collections import deque
 import random, os, pdb
 import numpy as np
+from sklearn import preprocessing
+import tensorrt
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, LSTM, CuDNNLSTM, BatchNormalization
 from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.callbacks import ModelCheckpoint, ModelCheckpoint
 import time
-from sklearn import preprocessing
 
 '''
 Use:
@@ -132,15 +133,15 @@ print(f"VALIDATION Dont buys: {validation_y.count(0)}, buys: {validation_y.count
 
 # Create DNN Model
 model = Sequential()
-model.add(LSTM(128, input_shape=(train_x.shape[1:]), return_sequences=True))
+model.add(CuDNNLSTM(128, input_shape=(train_x.shape[1:]), return_sequences=True))
 model.add(Dropout(0.2))
 model.add(BatchNormalization())
 
-model.add(LSTM(128, return_sequences=True))
+model.add(CuDNNLSTM(128, return_sequences=True))
 model.add(Dropout(0.1))
 model.add(BatchNormalization())
 
-model.add(LSTM(128))
+model.add(CuDNNLSTM(128))
 model.add(Dropout(0.2))
 model.add(BatchNormalization())
 

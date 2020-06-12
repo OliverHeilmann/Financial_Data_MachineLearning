@@ -23,7 +23,7 @@ from FetchTickers import Market_Index_TickerList
 ############# MANUAL PARAMETERS REQUIRED TO BE SET BELOW ################
 ticker_no = 250     # define number of tickers being collected -->tickers[0:n]
 threads = 10        # number of threads pulling ticker data (1 per CPU core)
-pull_step = 15      # time (60 seconds) between price pull (minimum 15s to allow for stock collection delay)
+pull_step = 10      # time (60 seconds) between price pull (minimum 10s to allow for stock collection delay)
 rows = 2          # number of rows before csv is pushed to Github (1 hour)
 
 # Set Market Open/ Close times (must add the times in)
@@ -139,7 +139,7 @@ class StoreLiveData:
                     # Append price list to dataframe if markets are open
                     for i in range(0,self.rows):
                         # IF statement to check if markets are open
-                        state  = self.stockmarket_openhours(self.zone, self.m_open, self.m_close)
+                        state = self.stockmarket_openhours(self.zone, self.m_open, self.m_close, self.store_weekend)
                         if state == True:
                             self.df = self.dataframe_prices(dataframe = self.df)
                             print('Collecting stock prices every {} seconds...'.format(self.pull_step))
@@ -152,7 +152,6 @@ class StoreLiveData:
                         self.GH.upload_github() 
                     else:
                         # Append dataframe to csv file
-                        pdb.set_trace()
                         self.df.to_csv(self.filename, mode='a', header=False)
                         #print(self.df)
                         print('\nAppended {}...\n{} rows added\b'.format(self.filename, len(self.df)))

@@ -103,6 +103,7 @@ class AssignWorkers():
             if i is None:
                 pricelist = [None]
                 break
+        print(pricelist)
         return pricelist
     
     # Define number of tickers and threads to run

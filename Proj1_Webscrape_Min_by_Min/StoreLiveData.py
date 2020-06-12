@@ -6,6 +6,11 @@ Created on Fri Mar 13 22:57:22 2020
 My next task is to webscrape minute by minute data for FTSE 500 companies.
 7 days of data should be sufficient here as this is 604,800 total sample which
 is likely far more than is required.
+
+To ensure that user is not prompted for usr/pswd on loop for github push, one
+should clone repo with credentials as seen below:
+    git clone https://username:password@github.com/username/repository.git
+
 """
 import time
 import pdb, os
@@ -18,8 +23,8 @@ from FetchTickers import Market_Index_TickerList
 ############# MANUAL PARAMETERS REQUIRED TO BE SET BELOW ################
 ticker_no = 250     # define number of tickers being collected -->tickers[0:n]
 threads = 10        # number of threads pulling ticker data (1 per CPU core)
-pull_step = 3      # time (60 seconds) between price pull
-rows = 5          # number of rows before csv is pushed to Github (1 hour)
+pull_step = 2      # time (60 seconds) between price pull
+rows = 20          # number of rows before csv is pushed to Github (1 hour)
 
 # Set Market Open/ Close times (must add the times in)
 zone = timezone('Europe/London')    # set the timezone of stock market 

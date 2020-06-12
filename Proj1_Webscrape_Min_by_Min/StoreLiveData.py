@@ -152,6 +152,7 @@ class StoreLiveData:
                         self.GH.upload_github() 
                     else:
                         # Append dataframe to csv file
+                        pdb.set_trace()
                         self.df.to_csv(self.filename, mode='a', header=False)
                         #print(self.df)
                         print('\nAppended {}...\n{} rows added\b'.format(self.filename, len(self.df)))

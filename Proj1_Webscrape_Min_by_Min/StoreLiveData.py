@@ -18,8 +18,8 @@ from FetchTickers import Market_Index_TickerList
 ############# MANUAL PARAMETERS REQUIRED TO BE SET BELOW ################
 ticker_no = 250     # define number of tickers being collected -->tickers[0:n]
 threads = 10        # number of threads pulling ticker data (1 per CPU core)
-pull_step = 60      # time (60 seconds) between price pull
-rows = 15           # number of rows before csv is pushed to Github (1 hour)
+pull_step = 5      # time (60 seconds) between price pull
+rows = 5           # number of rows before csv is pushed to Github (1 hour)
 
 # Set Market Open/ Close times (must add the times in)
 zone = timezone('Europe/London')    # set the timezone of stock market 
@@ -27,7 +27,7 @@ m_open = [8, 0, 0, 0]               # [hour, minute, second, microsecond]
 m_close = [16, 30, 0, 0]            # [hour, minute, second, microsecond]
     
 # Minute by Minute data collection filename
-filename = 'minute_by_minute.csv'
+filename = 'minute_by_minute_weekends2.csv'
 
 # Get tickers from Wiki URL
 t_filename = 'FTSE250.pickle'
@@ -38,7 +38,7 @@ s_filename = 'TickerSuffix.pickle'
 yahooURL = 'https://help.yahoo.com/kb/exchanges-data-providers-yahoo-finance-sln2310.html'
 
 save = True
-store_weekend = False
+store_weekend = True
 ####################### END OF MANUAL PARAMETERS #########################
 
 

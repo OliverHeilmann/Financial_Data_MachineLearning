@@ -84,6 +84,7 @@ class StoreLiveData:
         if dataframe.size >= 0:
             liveprice = self.AW.pull_live_price()
             # Append dataframe with new data
+            liveprice[0] = 1
             if liveprice != [None]:
                 self.df.loc[len(self.df)] = liveprice
             return self.df

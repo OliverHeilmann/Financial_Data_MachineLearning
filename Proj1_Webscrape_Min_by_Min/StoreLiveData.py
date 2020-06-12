@@ -18,8 +18,8 @@ from FetchTickers import Market_Index_TickerList
 ############# MANUAL PARAMETERS REQUIRED TO BE SET BELOW ################
 ticker_no = 250     # define number of tickers being collected -->tickers[0:n]
 threads = 10        # number of threads pulling ticker data (1 per CPU core)
-pull_step = 5      # time (60 seconds) between price pull
-rows = 5           # number of rows before csv is pushed to Github (1 hour)
+pull_step = 3      # time (60 seconds) between price pull
+rows = 5          # number of rows before csv is pushed to Github (1 hour)
 
 # Set Market Open/ Close times (must add the times in)
 zone = timezone('Europe/London')    # set the timezone of stock market 
@@ -143,12 +143,12 @@ class StoreLiveData:
                     if not os.path.exists(self.filename):
                         self.df.to_csv(self.filename)
                         print(self.df)
-                        print('\n\nCreated filepath...\n{} rows added\n\n'.format(len(self.df)-1))
+                        print('\n\nCreated filepath {}...\n{} rows added\n\n'.format(self.filename, len(self.df)-1))
                         self.GH.upload_github() 
                     else:
                         # Append dataframe to csv file
                         self.df.to_csv(self.filename, mode='a', header=False)
-                        print(self.df)
+                        #print(self.df)
                         print('\nAppended {}...\n{} rows added\b'.format(self.filename, len(self.df)))
                         self.GH.upload_github()
                 else:

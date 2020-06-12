@@ -23,8 +23,8 @@ from FetchTickers import Market_Index_TickerList
 ############# MANUAL PARAMETERS REQUIRED TO BE SET BELOW ################
 ticker_no = 250     # define number of tickers being collected -->tickers[0:n]
 threads = 10        # number of threads pulling ticker data (1 per CPU core)
-pull_step = 2      # time (60 seconds) between price pull
-rows = 20          # number of rows before csv is pushed to Github (1 hour)
+pull_step = 15      # time (60 seconds) between price pull (minimum 15s to allow for stock collection delay)
+rows = 2          # number of rows before csv is pushed to Github (1 hour)
 
 # Set Market Open/ Close times (must add the times in)
 zone = timezone('Europe/London')    # set the timezone of stock market 

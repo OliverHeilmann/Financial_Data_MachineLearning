@@ -127,24 +127,24 @@ class AssignWorkers():
 if __name__ == '__main__': 
     print('\nMAIN SCRIPT:\n')
     
-    picklepath = 'sp500tickers.pickle'
+    picklepath = 'FTSE250.pickle'
     if not os.path.exists(picklepath):
         print('\nNo path to ticker pickle...\n')
     else:
         with open(picklepath, "rb") as f:
             tickers = pickle.load(f)
-    
-    # Testing Github thread
-#    GH = GithubUpdate()
-#    GH.start()
-#    time.sleep(0.5)
-#    GH.upload_github()
-    
-    # Testing webscraping threads
-    AW = AssignWorkers()
-    AW.assignworkers(tickerlist=tickers, tickerNo = 100, workerNo = 5)
-    time.sleep(5)
-    for i in range(0,100):
-        print(len(AW.pull_live_price()))
-        time.sleep(2)
-    AW.stop_all()
+
+        # Testing Github thread
+        #    GH = GithubUpdate()
+        #    GH.start()
+        #    time.sleep(0.5)
+        #    GH.upload_github()
+        
+        # Testing webscraping threads
+        AW = AssignWorkers()
+        AW.assignworkers(tickerlist=tickers, tickerNo = 100, workerNo = 5)
+        time.sleep(5)
+        for i in range(0,100):
+            print(len(AW.pull_live_price()))
+            time.sleep(2)
+        AW.stop_all()

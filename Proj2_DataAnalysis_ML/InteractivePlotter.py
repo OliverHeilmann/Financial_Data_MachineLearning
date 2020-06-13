@@ -15,11 +15,12 @@ rcParams['figure.figsize'] = 20,10
 # Clean input csv data. Yahoo Finance is fairly buggy and produces several 
 # spurious results (negative prices, NaNs, zeros etc.). This function deletes 
 # these companies where applicable.
-def cleandata(df=None):
+def cleandata(df=None, thresh= 0.05):
     # Some NaN values are ok -drop companies with excessive NaNs though
     nans = df.isna().sum(); droplist = ['Date']
+
     for company in df.columns[1:]:
-        if nans[company]/df.shape[0] > 0.05:
+        if nans[company]/df.shape[0] > thresh:
             droplist.append(company)
 #        else: 
 #            # code below replaces '0' value with 'i-1' value to avoid returning
@@ -57,7 +58,7 @@ def cleandata(df=None):
 
 
 # Plot this data on a heatmap (CORRELATION TABLE)
-def visualize_corr_data(csv_name=None, companies=None, clean=True):
+def visualize_corr_data(csv_name=None, companies=None, clean=True, threshold=0.05):
     df = pd.read_csv(csv_name)  
     
     # If companies defined, ignore others
@@ -67,7 +68,7 @@ def visualize_corr_data(csv_name=None, companies=None, clean=True):
     
     # Clean dataframe data
     if clean:
-        df = cleandata(df=df)
+        df = cleandata(df=df, thresh = threshold)
     else:
         df = df.drop('Date', axis=1)
     

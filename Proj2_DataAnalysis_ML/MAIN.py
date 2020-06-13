@@ -116,7 +116,7 @@ def compile_data(picklepath=None, name=None, comp=True, col_replace='Adj Close')
 if __name__ == '__main__':
     # You should compile data on first run, not necesary for subsequent ones 
     # however the data will not update until recompiled.
-    collect_tickers_and_compile, COMP = False, False
+    collect_tickers_and_compile, COMP = True, True
     
     # Define CSV Filenames
     compilename = 'FTSE250_Compiled.csv'
@@ -126,9 +126,9 @@ if __name__ == '__main__':
         # Adding additional tickers to tickerlist. Notice that there are
         # repeats. The program will not duplicate these.
         add = ['IAG.L', 'GFS.L', 'BAB.L', 'AJB.L', 'K3C.L', 'CHG.L',
-               'EVR.L', 'CNA.L', 'FRAS.L', 'JDW.L', 'MAB.L','IAG.L', 
-               'PSN.L', 'K3C.L', 'BOO.L', 'SSE.L', 'REL.L', 'EVR.L',
-               'CNA.L', 'JEO.L', 'PHP.L', 'AJB.L', 'BA.L', 'MCX.L']
+               'EVR.L', 'CNA.L', 'FRAS.L', 'JDW.L', 'MAB.L','IAG.L', 'BHP.L',
+               'PSN.L', 'K3C.L', 'BOO.L', 'SSE.L', 'REL.L', 'EVR.L', 'AAL.L',
+               'CNA.L', 'JEO.L', 'PHP.L', 'AJB.L', 'BA.L', 'MCX.L', 'OCDO.L']
         
         # Get tickers from wikipedia
         t_filename = 'FTSE250.pickle'
@@ -143,7 +143,7 @@ if __name__ == '__main__':
                                      save=True, add_companies=add)
         
         # collect day by day stock data from yahoo (Set reload=True to get new tickers)
-        get_data_from_yahoo(reload=True, ticker_funct=YS, picklepath=t_filename, startdate=[2005,1,1])
+        get_data_from_yahoo(reload=True, ticker_funct=YS, picklepath=t_filename, startdate=[2020,2,1])
         
         # compile this information into x1 .csv file for later use and/or reference
         compile_data(picklepath=t_filename , name=compilename)
@@ -154,21 +154,22 @@ if __name__ == '__main__':
     ##################################################################   
     # Are there any specific companies you want to view?
     # (make sure these are in compiled list before requesting to view)
-    #view_comps = ['IAG.L', 'GFS.L', 'BAB.L', 'AJB.L', 'K3C.L', 'JDW.L']
+    view_comps = ['IAG.L', 'GFS.L', 'BAB.L', 'AJB.L', 'OCDO.L', 'JDW.L', 'BHP.L', 'AAL.L']
     view_comps = None
     
     # Create a CORRELATION TABLE
-    #visualize_corr_data(csv_name=compilename, companies=view_comps, clean=True)
+    visualize_corr_data(csv_name=compilename, companies=view_comps, clean=True, threshold=1)
     
     # Plot company data/ use interactive plotter
     for i in ['Standardised', 'Percentage Change', 'Price']:
         #time_series_plot(csv_name=compilename, Type=i, companies=view_comps,clean=True, avg=True)
-        time_series_plot(csv_name=compilename_vol, Type=i, companies=view_comps,clean=True, avg=True)
-     
+        #time_series_plot(csv_name=compilename_vol, Type=i, companies=view_comps,clean=True, avg=True)
+        pass
+        
     # Train Machine Learning Model (change ticker name after looking at above plots)
-    tic = 'GFS.L'
-    model = tickerML(ticker=tic, requirement=0.02, hm_days=10, comp=COMP)
-    #model.run_model()
+    tic = 'OCDO.L'
+    model = tickerML(ticker=tic, requirement=0.02, hm_days=7, comp=COMP)
+    model.run_model()
     
     # Create a candlestick plot for a specific ticker
     #candlestickplot(tic)
